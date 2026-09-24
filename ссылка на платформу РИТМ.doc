@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Ссылка на платформу РИТМ</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 48px; color: #24232b; }
+    h1 { margin: 0 0 12px; font-size: 28px; }
+    p { margin: 8px 0; font-size: 15px; line-height: 1.5; }
+    a { color: #5f46d9; font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Платформа «РИТМ»</h1>
+  <p>Решения · Исполнение · Трекинг · Медиа</p>
+  <p>Рабочая версия платформы доступна по ссылке:</p>
+  <p><a href="https://ritm-one.vercel.app">https://ritm-one.vercel.app</a></p>
+</body>
+</html>

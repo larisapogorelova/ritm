@@ -1,0 +1,11 @@
+.vercel
+presentation-assets
+presentation.html
+*.doc
+*.docx
+!Исходный файл НТР.docx
+!Исходная форма ССП.docx
+!Исходный файл ДНЦ.docx
+!ПРОТОКОЛ пример формы.docx
+*.md
+*.pdf

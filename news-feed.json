@@ -1,0 +1,12 @@
+{
+  "generatedAt": null,
+  "items": [],
+  "schema": {
+    "category": "culture | sport | education | youth",
+    "title": "Заголовок официальной новости",
+    "summary": "Краткое описание",
+    "source": "Название официального источника",
+    "published": "Дата в формате ISO 8601",
+    "url": "Ссылка на оригинал"
+  }
+}
