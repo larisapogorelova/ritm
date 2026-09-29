@@ -629,6 +629,20 @@
             </div>
             <h3>Вопросы повестки и резолюции</h3>
             <div id="protocol-items" class="protocol-items"></div>
+            <section class="audio-protocol-card" aria-labelledby="audio-protocol-title">
+              <div class="panel-head">
+                <div>
+                  <h3 id="audio-protocol-title">Аудиозапись заседания</h3>
+                  <p>Загрузите запись для подготовки черновика протокола с помощью AI.</p>
+                </div>
+                <span class="status-pill violet-pill">AI-черновик</span>
+              </div>
+              <label class="audio-upload">Прикрепить аудиофайл<input id="protocol-audio" type="file" accept="audio/*" /></label>
+              <p class="audio-file-name" id="protocol-audio-name">Файл не прикреплён</p>
+              <button class="primary-button small" id="transcribe-protocol" type="button">Подготовить черновик протокола</button>
+              <p class="form-hint" id="transcription-status">Аудиозапись будет сохранена вместе с выбранным Советом.</p>
+              <label class="protocol-notes">Черновик по аудиозаписи<textarea id="protocol-transcript" rows="7" placeholder="Здесь появится черновик протокола"></textarea></label>
+            </section>
             <label class="protocol-notes"
               >Дополнительные замечания секретаря<textarea
                 id="meeting-notes"
@@ -971,13 +985,7 @@
             <option value="dnc">Совет по ДНЦ</option>
           </select></label
         ><label
-          >Ответственный<select id="task-owner">
-            <option>Выберите исполнителя</option>
-            <option>Алексей Морозов</option>
-            <option>Елена Волкова</option>
-            <option>Мария Кузнецова</option>
-            <option>Лариса Яковлевна</option>
-          </select></label
+          >Ответственный<input id="task-owner" maxlength="160" placeholder="Введите ФИО, должность или подразделение" /></label
         ><button class="primary-button full" id="create-task">
           Создать поручение →
         </button>

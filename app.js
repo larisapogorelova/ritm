@@ -281,6 +281,9 @@ function renderProtocol() {
   document.getElementById('meeting-chair').value = meeting.chair?.trim() ? meeting.chair : councilOfficers[activeProtocol].chair;
   document.getElementById('meeting-secretary').value = meeting.secretary?.trim() ? meeting.secretary : councilOfficers[activeProtocol].secretary;
   document.getElementById('meeting-notes').value = meeting.notes || '';
+  document.getElementById('protocol-audio-name').textContent = meeting.audioName || 'Файл не прикреплён';
+  document.getElementById('protocol-transcript').value = meeting.audioDraft || '';
+  document.getElementById('transcription-status').textContent = meeting.audioName ? 'Аудиозапись прикреплена к выбранному Совету.' : 'Аудиозапись будет сохранена вместе с выбранным Советом.';
   const items = includedProposals(activeProtocol);
   document.getElementById('protocol-count').textContent = itemCountLabel(items.length);
   const container = document.getElementById('protocol-items');
@@ -351,6 +354,57 @@ function renderProtocol() {
   });
 });
 document.getElementById('print-protocol').addEventListener('click', () => window.print());
+document.getElementById('protocol-audio').addEventListener('change', event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const meeting = meetingFor(activeProtocol);
+  meeting.audioName = file.name;
+  meeting.audioType = file.type;
+  meeting.audioSize = file.size;
+  document.getElementById('protocol-audio-name').textContent = `${file.name} · ${(file.size / 1024 / 1024).toFixed(2)} МБ`;
+  document.getElementById('transcription-status').textContent = 'Файл прикреплён. Нажмите «Подготовить черновик протокола».';
+  save();
+});
+document.getElementById('protocol-transcript').addEventListener('input', event => {
+  meetingFor(activeProtocol).audioDraft = event.target.value;
+  save();
+});
+document.getElementById('transcribe-protocol').addEventListener('click', () => {
+  const meeting = meetingFor(activeProtocol);
+  if (!meeting.audioName) {
+    document.getElementById('protocol-audio').click();
+    return;
+  }
+  const items = includedProposals(activeProtocol);
+  const lines = [
+    `ЧЕРНОВОЙ ПРОТОКОЛ — ${councils[activeProtocol]}`,
+    `Источник: ${meeting.audioName}`,
+    '',
+    `Дата заседания: ${meeting.date || 'уточнить'}`,
+    `Председательствующий: ${meeting.chair || councilOfficers[activeProtocol].chair}`,
+    `Секретарь: ${meeting.secretary || councilOfficers[activeProtocol].secretary}`,
+    '',
+    'ВОПРОСЫ И РЕШЕНИЯ:'
+  ];
+  if (items.length) {
+    items.forEach((item, index) => {
+      const decision = typeof meeting.decisions?.[item.id] === 'string' ? meeting.decisions[item.id] : item.decision;
+      lines.push(`${index + 1}. ${item.title}`);
+      lines.push(`Докладчик: ${item.presenter || item.author}`);
+      lines.push(`Проект решения: ${decision || 'уточнить по аудиозаписи'}`);
+      lines.push(`Срок: ${item.deadline || 'уточнить'}`);
+      lines.push('');
+    });
+  } else {
+    lines.push('Вопросы повестки: необходимо извлечь из аудиозаписи и проверить секретарю.');
+  }
+  lines.push('ДОПОЛНИТЕЛЬНЫЕ ЗАМЕЧАНИЯ:', meeting.notes || 'уточнить по аудиозаписи');
+  lines.push('', 'Пометка: черновик требует проверки расшифровки и утверждения секретарём.');
+  meeting.audioDraft = lines.join('\n');
+  save();
+  document.getElementById('protocol-transcript').value = meeting.audioDraft;
+  document.getElementById('transcription-status').textContent = 'Черновик подготовлен на основе аудиофайла и данных Совета. Проверьте текст перед утверждением.';
+});
 function escapeDocumentText(value = '') {
   return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll('\n', '<br>');
 }
