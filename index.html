@@ -7,27 +7,64 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar">
-        <div class="brand">
-          <span class="brand-mark">Р</span>
-          <div><strong>РИТМ</strong><small>решения · исполнение</small></div>
+    <section class="landing-page" id="landing-page">
+      <div class="landing-glow landing-glow-one"></div>
+      <div class="landing-glow landing-glow-two"></div>
+      <header class="landing-header">
+        <div class="landing-brand"><span class="landing-mark">Р</span><div><strong>РИТМ</strong><small>Решения · Исполнение · Трекинг · Медиа</small></div></div>
+        <span class="landing-status"><i></i> ЕДИНАЯ ПЛАТФОРМА УПРАВЛЕНИЯ</span>
+      </header>
+      <main class="landing-main">
+        <div class="landing-intro">
+          <p class="landing-kicker">ЛУГАНСКАЯ НАРОДНАЯ РЕСПУБЛИКА</p>
+          <h1>Решения,<br><em>которые действуют.</em></h1>
+          <p class="landing-lede">Единое цифровое пространство для работы Советов: от повестки и протокола до исполнения поручения и публикации результата.</p>
+          <button class="landing-enter" id="enter-platform">Войти на платформу <span>→</span></button>
         </div>
+        <div class="landing-institutions" aria-label="Органы государственной власти">
+          <div class="institution-primary">
+            <div class="institution-logo government-logo"><img src="логотипы/Правительство.jpg" alt="Правительство Луганской Народной Республики"></div>
+            <span>ПРАВИТЕЛЬСТВО</span><strong>ЛУГАНСКОЙ НАРОДНОЙ РЕСПУБЛИКИ</strong>
+          </div>
+          <div class="institution-primary">
+            <div class="institution-logo chief-logo"><img src="логотипы/АГ ЛНР.webp" alt="Администрация Главы Луганской Народной Республики"></div>
+            <span>АДМИНИСТРАЦИЯ</span><strong>ГЛАВЫ ЛУГАНСКОЙ НАРОДНОЙ РЕСПУБЛИКИ</strong>
+          </div>
+        </div>
+        <div class="landing-ministry-row" aria-label="Министерства Луганской Народной Республики">
+          <div><img src="логотипы/Культура.gif" alt="Министерство культуры ЛНР"><span>Культура</span></div>
+          <div><img src="логотипы/спорт.png" alt="Министерство спорта ЛНР"><span>Спорт</span></div>
+          <div><img src="логотипы/мон лнр.jpg" alt="Министерство образования и науки ЛНР"><span>Образование и наука</span></div>
+          <div><img src="логотипы/минмол.jpg" alt="Министерство молодежной политики ЛНР"><span>Молодежная политика</span></div>
+        </div>
+        <div class="landing-quotes">
+          <blockquote>«Решение обретает ценность, когда становится действием.»<cite>ПРИНЦИП РИТМ</cite></blockquote>
+          <blockquote>«Общий ритм превращает отдельные усилия в результат.»<cite>ПРИНЦИП РИТМ</cite></blockquote>
+        </div>
+      </main>
+      <footer class="landing-footer"><span>РИТМ · РЕШЕНИЯ В ДЕЙСТВИИ</span><span>01 / ПЛАТФОРМА</span></footer>
+    </section>
+    <div class="app-shell" id="platform-shell">
+      <aside class="sidebar">
+        <a class="brand" id="brand-home" href="#landing-page" aria-label="Вернуться на главную страницу РИТМ">
+          <span class="brand-mark" aria-label="Эмблема РИТМ">Р</span>
+          <div><strong>РИТМ</strong><small>Решения Исполнение Трекинг Медиа</small></div>
+        </a>
         <nav class="main-nav" aria-label="Основная навигация">
           <button class="nav-item active" data-view="overview">
-            <span class="nav-icon">◈</span> Обзор <b>4</b>
+            <span class="nav-icon">◈</span> Обзор <b id="overview-count">0</b>
           </button>
           <button class="nav-item" data-view="tasks">
-            <span class="nav-icon">✓</span> Поручения <b>12</b>
+            <span class="nav-icon">✓</span> Поручения <b id="tasks-count">0</b>
           </button>
           <button class="nav-item" data-view="agenda">
             <span class="nav-icon">＋</span> Повестка <b id="agenda-count">0</b>
           </button>
           <button class="nav-item" data-view="protocols">
-            <span class="nav-icon">≡</span> Сводные протоколы <b>3</b>
+            <span class="nav-icon">≡</span> Сводные протоколы <b id="protocol-notifications">0</b>
           </button>
           <button class="nav-item" data-view="media">
-            <span class="nav-icon">◌</span> Медиа-мастерская <b>7</b>
+            <span class="nav-icon">◌</span> Медиа-мастерская <b id="media-notifications">0</b>
           </button>
           <button class="nav-item" data-view="analytics">
             <span class="nav-icon">↗</span> Аналитика
@@ -60,22 +97,34 @@
                 placeholder="Поиск по платформе"
                 aria-label="Поиск по платформе"
               /><kbd>⌘ K</kbd></label
-            ><button class="icon-button" title="Уведомления">♧<em></em></button
-            ><span class="user-name" title="Специалист ОКМВ № 1"
-              >Лариса Яковлевна<small>Специалист ОКМВ № 1</small></span
+            ><button class="icon-button" id="notifications-button" type="button" title="Уведомления" aria-label="Открыть уведомления">♧<em></em></button
             ><span
               class="avatar avatar-orange"
-              title="Лариса Яковлевна, специалист ОКМВ № 1"
-              >ЛЯ</span
+              title="Личный кабинет" aria-label="Личный кабинет"
+              >ЛК</span
             >
           </div>
         </header>
 
+        <section class="page-view" id="notifications-view">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">СОБЫТИЯ ПЛАТФОРМЫ</p>
+              <h1>Уведомления</h1>
+              <p class="lede">Последние изменения в протоколах и медиа-мастерской.</p>
+            </div>
+          </div>
+          <div class="panel notifications-list" id="notifications-list" aria-live="polite"></div>
+        </section>
         <section class="page-view active" id="overview-view">
           <div class="page-heading">
             <div>
-              <p class="eyebrow">СПЕЦИАЛИСТ ОКМВ № 1</p>
-              <h1>Добрый день, Лариса Яковлевна</h1>
+              <p class="eyebrow">РАБОЧИЙ КОНТУР</p>
+              <div class="platform-identity">
+                <span class="identity-mark">Р</span>
+                <div><strong>РИТМ</strong><span>Решения · Исполнение · Трекинг · Медиа</span></div>
+              </div>
+              <h1>Обзор поручений</h1>
               <p class="lede">
                 Главное по решениям Советов — в одном рабочем ритме.
               </p>
@@ -84,13 +133,18 @@
               + Новое поручение
             </button>
           </div>
+          <section class="ministry-logos" aria-label="Министерства Луганской Народной Республики">
+            <button class="ministry-logo ministry-culture" data-ministry-councils="dnc" title="Открыть Совет по ДНЦ" type="button"><span>МК</span><strong>Министерство культуры ЛНР<small>Совет по ДНЦ</small></strong></button>
+            <div class="ministry-logo ministry-sport"><span>МС</span><strong>Министерство спорта ЛНР</strong></div>
+            <button class="ministry-logo ministry-science" data-ministry-councils="ntr,ssp" title="Открыть Советы по НТР и ССП" type="button"><span>МОН</span><strong>Министерство образования и науки ЛНР<small>Советы по НТР и ССП</small></strong></button>
+            <div class="ministry-logo ministry-youth"><span>ММП</span><strong>Министерство молодежной политики ЛНР</strong></div>
+          </section>
           <div class="insight-banner">
             <div class="insight-orb">✦</div>
             <div>
               <strong>Фокус недели</strong>
               <p>
-                3 задачи требуют внимания до пятницы. Система уже собрала
-                контекст и предложила следующий шаг.
+                Здесь отображаются только поручения, загруженные или созданные в системе.
               </p>
             </div>
             <button class="text-button" data-view="tasks">
@@ -107,9 +161,9 @@
                 <span>Поручения в работе</span
                 ><span class="trend up">↑ 12%</span>
               </div>
-              <strong>48</strong>
+                <strong id="overview-in-work">0</strong>
               <div class="metric-foot">
-                <span>из 64 за месяц</span>
+                <span>загружено в систему</span>
                 <div class="mini-bars">
                   <i style="height: 35%"></i><i style="height: 58%"></i
                   ><i style="height: 43%"></i><i style="height: 76%"></i
@@ -123,9 +177,9 @@
                 <span>Риск срыва</span
                 ><span class="trend down">− 3 задачи</span>
               </div>
-              <strong>4</strong>
+                <strong id="overview-risk">0</strong>
               <div class="metric-foot">
-                <span>нужен ваш взгляд</span>
+                <span>требуют внимания</span>
                 <div class="risk-dots">
                   <i></i><i></i><i></i><i></i><i class="empty"></i
                   ><i class="empty"></i>
@@ -137,9 +191,9 @@
                 <span>Исполнено в срок</span
                 ><span class="trend up">↑ 8.4%</span>
               </div>
-              <strong>86<span class="unit">%</span></strong>
+                <strong id="overview-done">0<span class="unit">%</span></strong>
               <div class="metric-foot">
-                <span>цель — 90%</span>
+                <span>исполнено в срок</span>
                 <div class="progress"><i style="width: 86%"></i></div>
               </div>
             </article>
@@ -148,9 +202,9 @@
                 <span>Публикации за 30 дней</span
                 ><span class="trend up">↑ 24%</span>
               </div>
-              <strong>32</strong>
+                <strong id="overview-total">0</strong>
               <div class="metric-foot">
-                <span>охват × 2.1 к базе</span
+                <span>всего поручений</span
                 ><span class="metric-spark">⌁</span>
               </div>
             </article>
@@ -159,64 +213,16 @@
             <section class="panel task-panel">
               <div class="panel-head">
                 <div>
-                  <h2>Задачи, требующие внимания</h2>
+                  <h2>Поручения, требующие внимания</h2>
                   <p>
-                    Система выделила их по сроку, активности и подтверждениям.
+                    Появятся после загрузки конкретных поручений.
                   </p>
                 </div>
                 <button class="filter-button" id="filter-risk">
                   Только риски <span>⌄</span>
                 </button>
               </div>
-              <div class="task-list" id="task-list">
-                <article
-                  class="task-row risk"
-                  data-search="секция дополнительного образования образование министерство"
-                >
-                  <div class="priority high">!</div>
-                  <div class="task-main">
-                    <div class="task-meta">
-                      <span>ОБРАЗОВАНИЕ</span><time>до 25 сентября</time>
-                    </div>
-                    <h3>Открыть секцию дополнительного образования</h3>
-                    <p>Нет подтверждающих документов · без активности 5 дней</p>
-                  </div>
-                  <span class="status-pill red">Высокий риск</span
-                  ><button class="row-arrow">→</button>
-                </article>
-                <article
-                  class="task-row risk"
-                  data-search="программа поддержки предпринимателей экономика"
-                >
-                  <div class="priority high">!</div>
-                  <div class="task-main">
-                    <div class="task-meta">
-                      <span>ЭКОНОМИКА</span><time>до 27 сентября</time>
-                    </div>
-                    <h3>Согласовать программу поддержки предпринимателей</h3>
-                    <p>
-                      Запрошен перенос срока · ожидается решение председателя
-                    </p>
-                  </div>
-                  <span class="status-pill amber">На согласовании</span
-                  ><button class="row-arrow">→</button>
-                </article>
-                <article
-                  class="task-row"
-                  data-search="ремонт спортивных объектов спорт"
-                >
-                  <div class="priority medium">•</div>
-                  <div class="task-main">
-                    <div class="task-meta">
-                      <span>СПОРТ</span><time>до 30 сентября</time>
-                    </div>
-                    <h3>Предоставить график ремонта спортивных объектов</h3>
-                    <p>Последнее обновление сегодня в 09:42</p>
-                  </div>
-                  <span class="status-pill blue">В работе</span
-                  ><button class="row-arrow">→</button>
-                </article>
-              </div>
+              <div class="task-list" id="task-list"><p class="empty-state">Поручения появятся после загрузки или создания конкретных записей.</p></div>
               <button class="panel-link" data-view="tasks">
                 Показать все поручения <span>→</span>
               </button>
@@ -229,42 +235,7 @@
                 </div>
                 <button class="dots">···</button>
               </div>
-              <div class="activity-list">
-                <div class="activity">
-                  <span class="activity-icon violet">AI</span>
-                  <div>
-                    <p>
-                      <strong>ИИ-ассистент</strong> нашёл подтверждение в отчёте
-                    </p>
-                    <small>Открытие секции · 12 минут назад</small>
-                  </div>
-                </div>
-                <div class="activity">
-                  <span class="activity-icon orange">ПР</span>
-                  <div>
-                    <p>
-                      <strong>Пресс-служба спорта</strong> опубликовала пост
-                    </p>
-                    <small
-                      >«Спорт начинается с доступности» · 1 час назад</small
-                    >
-                  </div>
-                </div>
-                <div class="activity">
-                  <span class="activity-icon blue">МК</span>
-                  <div>
-                    <p><strong>Мария Кузнецова</strong> запросила перенос</p>
-                    <small>Программа поддержки · 2 часа назад</small>
-                  </div>
-                </div>
-                <div class="activity">
-                  <span class="activity-icon green">✓</span>
-                  <div>
-                    <p><strong>Поручение исполнено</strong></p>
-                    <small>Реестр получателей субсидий · 3 часа назад</small>
-                  </div>
-                </div>
-              </div>
+              <div class="activity-list"><p class="empty-state">События появятся после загрузки поручений.</p></div>
               <button class="panel-link">Вся лента <span>→</span></button>
             </aside>
           </div>
@@ -319,22 +290,11 @@
                   <h2>Медиа-план</h2>
                   <p>Единый ритм публикаций</p>
                 </div>
-                <span class="date-badge">22–28 сен</span>
               </div>
               <div class="media-stat">
-                <strong>7</strong><span>материалов<br />на этой неделе</span>
-                <div class="media-circles">
-                  <i>ОБ</i><i>СП</i><i>ЭК</i><i>КЛ</i><b>+3</b>
-                </div>
+                <strong id="overview-media-count">0</strong><span>материалов<br />в медиа-мастерской</span>
               </div>
-              <div class="media-next">
-                <span class="dot green-dot"></span>
-                <div>
-                  <small>Ближайшая публикация</small
-                  ><strong>Сегодня, 16:00 · Спорт</strong>
-                </div>
-                <span>→</span>
-              </div>
+              <div id="overview-media-items"><p class="empty-state">Материалов пока нет.</p></div>
               <button class="panel-link" data-view="media">
                 Открыть медиа-мастерскую <span>→</span>
               </button>
@@ -348,10 +308,10 @@
             <div class="panel">
               <span class="eyebrow">ВЕДОМСТВА</span>
               <ul>
-                <li>Министерство культуры</li>
-                <li>Министерство спорта</li>
-                <li>Министерство молодежной политики</li>
-                <li>Министерство образования</li>
+                <li>Министерство культуры ЛНР</li>
+                <li>Министерство спорта ЛНР</li>
+                <li>Министерство молодежной политики ЛНР</li>
+                <li>Министерство образования и науки ЛНР</li>
               </ul>
             </div>
             <div class="panel">
@@ -367,9 +327,7 @@
             </div>
           </div>
           <p class="form-hint">
-            Показатели и карточки на обзорном экране являются демонстрационными.
-            Предложения и сводные протоколы ниже формируются из введённых вами
-            данных.
+             Обзор обновляется по мере загрузки и создания конкретных поручений.
           </p>
         </section>
 
@@ -391,9 +349,13 @@
                 data-task-tab="all"
                 aria-selected="true"
               >
-                Все <b>4</b></button
-              ><button class="tab" data-task-tab="mine" aria-selected="false">
-                Мои <b>2</b></button
+                Все <b>0</b></button
+              ><button class="tab" data-task-tab="dnc" aria-selected="false">
+                ДНЦ <b>0</b></button
+              ><button class="tab" data-task-tab="ssp" aria-selected="false">
+                ССП <b>0</b></button
+              ><button class="tab" data-task-tab="ntr" aria-selected="false">
+                НТР <b>0</b></button
               ><button class="tab" data-task-tab="risk" aria-selected="false">
                 В риске <b>1</b></button
               ><button class="tab" data-task-tab="done" aria-selected="false">
@@ -412,10 +374,10 @@
             <label
               >Министерство<select id="task-filter-ministry">
                 <option value="all">Все министерства</option>
-                <option value="culture">Культура</option>
-                <option value="education">Образование</option>
-                <option value="sport">Спорт</option>
-                <option value="youth">Молодежная политика</option>
+                <option value="culture">Министерство культуры ЛНР</option>
+                <option value="education">Министерство образования и науки ЛНР</option>
+                <option value="sport">Министерство спорта ЛНР</option>
+                <option value="youth">Министерство молодежной политики ЛНР</option>
                 <option value="general">Межведомственные</option>
               </select></label
             ><label
@@ -435,79 +397,11 @@
           </div>
           <div class="panel full-list" id="full-task-list">
             <div class="full-row head">
-              <span>ПОРУЧЕНИЕ</span><span>ВЛАДЕЛЕЦ</span><span>СРОК</span
+              <span>ПОРУЧЕНИЕ</span><span>ОТВЕТСТВЕННЫЙ</span><span>СРОК</span
               ><span>СТАТУС</span>
             </div>
-            <button
-              class="full-row task-record"
-              type="button"
-              data-task-status="risk"
-              data-task-scope="mine"
-              data-task-ministry="education"
-              data-task-council="ntr"
-              data-task-id="П-042"
-            >
-              <div>
-                <span class="priority high">!</span
-                ><strong>Открыть секцию дополнительного образования</strong
-                ><small>Совет по НТР · №П-042</small>
-              </div>
-              <span>Алексей Морозов</span><span class="date-risk">25 сен</span
-              ><span class="status-pill red">Высокий риск</span>
-            </button>
-            <button
-              class="full-row task-record"
-              type="button"
-              data-task-status="work"
-              data-task-scope="team"
-              data-task-ministry="sport"
-              data-task-council="ssp"
-              data-task-id="П-039"
-            >
-              <div>
-                <span class="priority medium">•</span
-                ><strong>Предоставить график ремонта спортивных объектов</strong
-                ><small>Совет по ССП · №П-039</small>
-              </div>
-              <span>Елена Волкова</span><span>30 сен</span
-              ><span class="status-pill blue">В работе</span>
-            </button>
-            <button
-              class="full-row task-record"
-              type="button"
-              data-task-status="done"
-              data-task-scope="team"
-              data-task-ministry="youth"
-              data-task-council="dnc"
-              data-task-id="П-035"
-            >
-              <div>
-                <span class="priority low">✓</span
-                ><strong>Подготовить программу молодежных инициатив</strong
-                ><small>Совет по ДНЦ · №П-035</small>
-              </div>
-              <span>Мария Кузнецова</span><span>18 сен</span
-              ><span class="status-pill green">Исполнено</span>
-            </button>
-            <button
-              class="full-row task-record"
-              type="button"
-              data-task-status="work"
-              data-task-scope="mine"
-              data-task-ministry="general"
-              data-task-council="ntr"
-              data-task-id="П-031"
-            >
-              <div>
-                <span class="priority medium">•</span
-                ><strong>Сверить календарь межведомственных мероприятий</strong
-                ><small>Совет по НТР · №П-031</small>
-              </div>
-              <span>Илья Смирнов</span><span>02 окт</span
-              ><span class="status-pill blue">В работе</span>
-            </button>
             <div class="task-empty" id="task-empty" hidden>
-              По выбранным условиям поручений не найдено.
+              Поручения не загружены. Создайте или загрузите конкретное поручение.
             </div>
           </div>
         </section>
@@ -560,10 +454,10 @@
               <label
                 >Министерство<select name="ministry" required>
                   <option value="">Выберите министерство</option>
-                  <option>Министерство культуры</option>
-                  <option>Министерство спорта</option>
-                  <option>Министерство молодежной политики</option>
-                  <option>Министерство образования</option>
+                  <option>Министерство культуры ЛНР</option>
+                  <option>Министерство спорта ЛНР</option>
+                  <option>Министерство молодежной политики ЛНР</option>
+                  <option>Министерство образования и науки ЛНР</option>
                 </select></label
               >
               <label
@@ -678,7 +572,7 @@
                 class="outline-button"
                 href="ПРОТОКОЛ%20пример%20формы.docx"
                 download
-                >Типовая форма сводного протокола DOCX</a
+                >Исходная форма протокола DOCX</a
               ><button class="outline-button" id="print-protocol" type="button">
                 Печать / PDF</button
               ><button
@@ -749,10 +643,21 @@
           </div>
         </section>
         <section class="page-view" id="media-view">
+          <div class="media-background" aria-hidden="true">
+            <svg viewBox="0 0 1000 800" preserveAspectRatio="none">
+              <path class="media-trace" d="M-50 70 C160 -30 240 240 420 120 S760 -20 1050 160" />
+              <path class="media-trace media-trace-second" d="M-50 280 C140 110 290 430 510 280 S810 170 1050 360" />
+              <path class="media-trace media-trace-third" d="M-50 490 C190 300 340 640 560 470 S820 370 1050 550" />
+              <path class="media-trace media-trace-second" d="M-50 730 C150 570 370 850 600 690 S850 610 1050 790" />
+              <path class="media-trace media-trace-third" d="M80 -50 C300 140 -60 310 180 460 S140 720 320 850" />
+              <path class="media-trace" d="M840 -50 C630 150 1070 330 820 500 S1030 690 780 850" />
+            </svg>
+            <span class="media-orbit"></span><span class="media-orbit media-orbit-second"></span>
+          </div>
           <div class="page-heading">
             <div>
               <p class="eyebrow">ЕДИНЫЙ ИНФОРМАЦИОННЫЙ РИТМ</p>
-              <h1>Медиа</h1>
+              <h1 class="media-title">МЕДИА</h1>
               <p class="lede">
                 От подтверждённого результата поручения до согласованной
                 публикации и мониторинга новостей.
@@ -786,10 +691,10 @@
                 </div>
                 <label
                   >Министерство<select id="publication-ministry" required>
-                    <option>Министерство культуры</option>
-                    <option>Министерство спорта</option>
-                    <option>Министерство молодежной политики</option>
-                    <option>Министерство образования</option>
+                    <option>Министерство культуры ЛНР</option>
+                    <option>Министерство спорта ЛНР</option>
+                    <option>Министерство молодежной политики ЛНР</option>
+                    <option>Министерство образования и науки ЛНР</option>
                   </select></label
                 >
                 <label
@@ -815,6 +720,8 @@
                     placeholder="Что фактически сделано, где и для кого"
                   ></textarea>
                 </label>
+                <label
+                  >Комментарий<textarea id="publication-comment" maxlength="2500" rows="3" placeholder="Дополнительные сведения об исполнении"></textarea></label>
                 <label
                   >Подтверждающий источник<input
                     id="publication-proof"
@@ -1002,22 +909,20 @@
                 отчетностью.
               </p>
             </div>
-            <button class="outline-button">Скачать отчет ↓</button>
+            <button class="outline-button" id="download-analytics">Скачать отчет ↓</button>
           </div>
           <div class="analysis-cards">
             <article>
-              <span>Средний цикл решения</span
-              ><strong>4.2 <small>дня</small></strong>
-              <p><b>− 68%</b> к базовому периоду</p>
+              <span>Всего поручений</span><strong id="analytics-tasks">0</strong>
+              <p>Созданные и загруженные поручения</p>
             </article>
             <article>
-              <span>Доля подтвержденных отчетов</span
-              ><strong>91 <small>%</small></strong>
-              <p><b>+ 14%</b> за последний месяц</p>
+              <span>Доля исполненных поручений</span><strong><span id="analytics-done">0</span> <small>%</small></strong>
+              <p id="analytics-done-detail">Исполнено 0 из 0</p>
             </article>
             <article>
-              <span>Медийный охват</span><strong>2.1 <small>×</small></strong>
-              <p><b>+ 42%</b> к базовому периоду</p>
+              <span>Медиаматериалы</span><strong id="analytics-media">0</strong>
+              <p>Материалы, переданные на редактирование</p>
             </article>
           </div>
           <div class="panel recommendations">
@@ -1027,33 +932,7 @@
                 <p>Сигналы, которые стоит обсудить на ближайшем Совете</p>
               </div>
             </div>
-            <div class="recommendation">
-              <span class="rec-number">01</span>
-              <div>
-                <strong
-                  >Уточнить владельца поручения «Секция дополнительного
-                  образования»</strong
-                >
-                <p>
-                  В карточке указано подразделение, но не зафиксирован
-                  конкретный исполнитель.
-                </p>
-              </div>
-              <button class="text-button">Исправить →</button>
-            </div>
-            <div class="recommendation">
-              <span class="rec-number">02</span>
-              <div>
-                <strong
-                  >Объединить 3 похожих вопроса по спортивной
-                  инфраструктуре</strong
-                >
-                <p>
-                  Система обнаружила общий объект и одинаковую цель в заявках.
-                </p>
-              </div>
-              <button class="text-button">Посмотреть →</button>
-            </div>
+            <div id="analytics-recommendations"><p class="empty-state">Данных пока нет. Показатели появятся по мере работы платформы.</p></div>
           </div>
         </section>
       </main>
@@ -1076,10 +955,10 @@
         <div class="form-grid">
           <label
             >Министерство<select id="task-ministry">
-              <option>Министерство культуры</option>
-              <option>Министерство спорта</option>
-              <option>Министерство молодежной политики</option>
-              <option>Министерство образования</option>
+              <option>Министерство культуры ЛНР</option>
+              <option>Министерство спорта ЛНР</option>
+              <option>Министерство молодежной политики ЛНР</option>
+              <option>Министерство образования и науки ЛНР</option>
             </select></label
           ><label
             >Срок<input id="task-deadline" type="date" value="2026-09-30"
@@ -1121,6 +1000,9 @@
             <small>Статус</small><strong id="task-detail-status"></strong>
           </div>
         </div>
+        <label>
+          Комментарий к исполнению<textarea id="task-detail-comment" rows="4" maxlength="2000" placeholder="Добавьте комментарий, результат или ссылку на подтверждающий документ"></textarea>
+        </label>
         <p class="modal-lede">
           Карточка содержит текущие сведения по поручению. Изменение статуса в
           прототипе отображается в списке до перезагрузки страницы.
@@ -1143,7 +1025,7 @@
             type="button"
             data-set-task-status="done"
           >
-            Отметить исполненным
+            Исполнено
           </button>
         </div>
       </div>

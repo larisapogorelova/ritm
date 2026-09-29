@@ -1,7 +1,35 @@
 const views = document.querySelectorAll('.page-view');
+document.querySelector('#enter-platform')?.addEventListener('click', () => {
+  document.querySelector('#landing-page')?.classList.add('is-hidden');
+  document.querySelector('#platform-shell')?.classList.add('is-open');
+});
+document.querySelector('#brand-home')?.addEventListener('click', event => {
+  event.preventDefault();
+  document.querySelector('#landing-page')?.classList.remove('is-hidden');
+  document.querySelector('#platform-shell')?.classList.remove('is-open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+document.querySelectorAll('[data-ministry-councils]').forEach(button => button.addEventListener('click', () => {
+  const councilsToOpen = button.dataset.ministryCouncils.split(',').filter(Boolean);
+  document.querySelector('#landing-page')?.classList.add('is-hidden');
+  document.querySelector('#platform-shell')?.classList.add('is-open');
+  if (councilsToOpen.length) {
+    activeAgenda = councilsToOpen[0];
+    showView('agenda');
+    renderAgenda();
+    document.querySelector('#agenda-view')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    showView('overview');
+  }
+}));
 const pageLabel = document.querySelector('#page-label');
 const labels = { overview: 'Обзор', tasks: 'Поручения', agenda: 'Повестка', protocols: 'Сводные протоколы', media: 'Медиа-мастерская', analytics: 'Аналитика' };
 const councils = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
+const councilDescriptions = {
+  ntr: 'Вопросы научно-технологического развития, инноваций и внедрения решений.',
+  ssp: 'Межведомственные вопросы и инициативы, рассматриваемые в контуре ССП.',
+  dnc: 'Вопросы и поручения Совета ДНЦ: от рассмотрения решений до контроля исполнения.'
+};
 const councilAgendaDocuments = {
   ntr: { shortName: 'НТР', source: 'Исходный файл НТР.docx' },
   ssp: { shortName: 'ССП', source: 'Исходная форма ССП.docx' },
@@ -21,6 +49,8 @@ function showView(view) {
   views.forEach(item => item.classList.toggle('active', item.id === `${view}-view`));
   document.querySelectorAll('.main-nav .nav-item').forEach(item => item.classList.toggle('active', item.dataset.view === view));
   pageLabel.textContent = labels[view];
+  if (view === 'analytics') renderAnalytics();
+  if (view === 'protocols' || view === 'media') updateNotifications(view, true);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 document.querySelectorAll('[data-view]').forEach(item => item.addEventListener('click', () => showView(item.dataset.view)));
@@ -33,10 +63,31 @@ function load(key, fallback) {
     return fallback;
   }
 }
+const notificationKey = 'ritm-notifications-v1';
+function updateNotifications(section, clear = false) {
+  const stored = load(notificationKey, {});
+  const counts = {};
+  for (const key of ['protocols', 'media']) {
+    counts[key] = Number.isSafeInteger(stored?.[key]) && stored[key] > 0 ? stored[key] : 0;
+  }
+  if (section) {
+    const visible = document.getElementById('platform-shell').classList.contains('is-open') && document.getElementById(`${section}-view`).classList.contains('active');
+    counts[section] = clear || visible ? 0 : counts[section] + 1;
+    try { localStorage.setItem(notificationKey, JSON.stringify(counts)); } catch { /* Counters remain available for this update. */ }
+  }
+  document.getElementById('protocol-notifications').textContent = counts.protocols;
+  document.getElementById('media-notifications').textContent = counts.media;
+}
+updateNotifications();
+window.addEventListener('storage', event => {
+  if (event.key === notificationKey || event.key === null) updateNotifications();
+});
 const storedProposals = load('kontur-proposals-v1', []);
 const proposals = Array.isArray(storedProposals) ? storedProposals : [];
 const storedMeetings = load('kontur-meetings-v1', {});
 const meetings = storedMeetings && typeof storedMeetings === 'object' && !Array.isArray(storedMeetings) ? storedMeetings : {};
+const storedTasks = load('kontur-tasks-v1', []);
+const tasks = Array.isArray(storedTasks) ? storedTasks : [];
 function save() {
   try {
     localStorage.setItem('kontur-proposals-v1', JSON.stringify(proposals));
@@ -44,6 +95,16 @@ function save() {
     return true;
   } catch {
     alert('Не удалось сохранить данные в этом браузере. Проверьте настройки локального хранилища.');
+    return false;
+  }
+}
+function saveTasks() {
+  try {
+    localStorage.setItem('kontur-tasks-v1', JSON.stringify(tasks));
+    renderAnalytics();
+    return true;
+  } catch {
+    alert('Не удалось сохранить поручения в этом браузере.');
     return false;
   }
 }
@@ -69,6 +130,7 @@ function renderAgenda() {
   });
   document.getElementById('proposal-council').value = activeAgenda;
   document.getElementById('agenda-title').textContent = `Предложения: ${councils[activeAgenda]}`;
+  document.getElementById('agenda-subtitle').textContent = councilDescriptions[activeAgenda];
   const agendaDocument = councilAgendaDocuments[activeAgenda];
   const sourceAgenda = document.getElementById('source-agenda');
   sourceAgenda.href = agendaDocument.source;
@@ -153,6 +215,7 @@ document.getElementById('proposal-form').addEventListener('submit', event => {
   };
   proposals.push(item);
   if (!save()) { proposals.pop(); return; }
+  updateNotifications('protocols');
   activeAgenda = item.council;
   form.reset();
   renderAgenda();
@@ -310,7 +373,7 @@ function downloadWordDocument(filename, title, content) {
 function agendaDocumentHtml(council) {
   const meeting = meetingFor(council);
   const rows = includedProposals(council).map((item, index) => `<tr><td>${index + 1}</td><td>${escapeDocumentText(item.title)}</td><td>${escapeDocumentText(item.presenter || item.author)}</td><td>${escapeDocumentText(item.reportTime || 'Уточняется')}</td></tr>`).join('');
-  return `<p style="text-align:center">${escapeDocumentText(councils[council])}</p><hr><table class="meta"><tr><td>Дата:</td><td>${escapeDocumentText(formatDocumentDate(meeting.date))}</td></tr><tr><td>Место:</td><td>${escapeDocumentText(meeting.place || '________________')}</td></tr><tr><td>Время:</td><td>${escapeDocumentText(meeting.time || '________________')}</td></tr></table><h1>Повестка дня</h1><table class="document-table"><thead><tr><th>№ п/п</th><th>Тема доклада</th><th>Докладчик</th><th>Время доклада</th></tr></thead><tbody>${rows || '<tr><td colspan="4">Предложения не поступили</td></tr>'}</tbody></table>`;
+  return `<p style="text-align:center">${escapeDocumentText('Наименование органа государственной власти субъекта Российской Федерации')}<br>${escapeDocumentText(councils[council])}</p><hr><h1>Повестка дня заседания</h1><table class="meta"><tr><td>Дата:</td><td>${escapeDocumentText(formatDocumentDate(meeting.date))}</td></tr><tr><td>Место:</td><td>${escapeDocumentText(meeting.place || '________________')}</td></tr><tr><td>Время:</td><td>${escapeDocumentText(meeting.time || '________________')}</td></tr><tr><td>Формат:</td><td>очно / видео-конференция / смешанный</td></tr></table><p><b>Основание проведения:</b> ________________________________________________</p><p><b>Председательствующий:</b> ${escapeDocumentText(meeting.chair || '________________')}</p><p><b>Секретарь:</b> ${escapeDocumentText(meeting.secretary || '________________')}</p><p><b>Приглашённые:</b> _________________________________________________________</p><table class="document-table"><thead><tr><th>№ п/п</th><th>Вопрос повестки</th><th>Докладчик</th><th>Время</th></tr></thead><tbody>${rows || '<tr><td colspan="4">Предложения не поступили</td></tr>'}</tbody></table><h2>Примечания</h2><p>________________________________________________________________________</p>`;
 }
 function protocolDocumentHtml(council) {
   const meeting = meetingFor(council);
@@ -322,7 +385,7 @@ function protocolDocumentHtml(council) {
     const responsible = typeof meeting.responsibles?.[item.id] === 'string' ? meeting.responsibles[item.id] : item.responsible;
     return `<section class="resolution"><h3>${index + 1}. Вопрос повестки: ${escapeDocumentText(item.title)}</h3><p><b>Докладчик:</b> ${escapeDocumentText(item.presenter || item.author)}</p><p><b>Предложение в резолюцию протокола:</b><br>${escapeDocumentText(decision || 'Не указано')}</p><p><b>Срок реализации:</b> ${escapeDocumentText(deadline || 'Не указан')}</p><p><b>Ответственные за реализацию:</b><br>${escapeDocumentText(responsible || 'Не указаны')}</p><p class="muted">Инициатор: ${escapeDocumentText(item.ministry)}, ${escapeDocumentText(item.author)}</p></section>`;
   }).join('');
-  return `<p style="text-align:center">АДМИНИСТРАЦИЯ ГЛАВЫ<br>ЛУГАНСКОЙ НАРОДНОЙ РЕСПУБЛИКИ</p><h1>Протокол заседания<br>${escapeDocumentText(councils[council])}</h1><table class="meta"><tr><td>${escapeDocumentText(formatDocumentDate(meeting.date))}</td><td>№ ${escapeDocumentText(meeting.number || '___')}</td></tr><tr><td>${escapeDocumentText(meeting.place || 'г. Луганск')}</td><td>${escapeDocumentText(meeting.time || '')}</td></tr></table><p><b>Председательствующий:</b> ${escapeDocumentText(meeting.chair || councilOfficers[council].chair)}</p><p><b>Секретарь:</b> ${escapeDocumentText(meeting.secretary || councilOfficers[council].secretary)}</p><h2>Повестка дня</h2>${agenda || '<p>Предложения не поступили.</p>'}<h2>Решения по протоколу</h2>${resolutions || '<p>Проекты решений не поступили.</p>'}${meeting.notes ? `<h2>Дополнительные замечания</h2><p>${escapeDocumentText(meeting.notes)}</p>` : ''}`;
+  return `<p style="text-align:center">${escapeDocumentText('Наименование органа государственной власти субъекта Российской Федерации')}<br>${escapeDocumentText(councils[council])}</p><h1>Протокол заседания<br>${escapeDocumentText(councils[council])}</h1><table class="meta"><tr><td>Дата: ${escapeDocumentText(formatDocumentDate(meeting.date))}</td><td>№ ${escapeDocumentText(meeting.number || '___')}</td></tr><tr><td>Место: ${escapeDocumentText(meeting.place || '________________')}</td><td>Время: ${escapeDocumentText(meeting.time || '________________')}</td></tr></table><p><b>Основание проведения:</b> ________________________________________________</p><p><b>Председательствующий:</b> ${escapeDocumentText(meeting.chair || councilOfficers[council].chair)}</p><p><b>Секретарь:</b> ${escapeDocumentText(meeting.secretary || councilOfficers[council].secretary)}</p><p><b>Присутствовали:</b> ______________________________________________________</p><p><b>Приглашённые:</b> _________________________________________________________</p><h2>Повестка дня</h2>${agenda || '<p>Предложения не поступили.</p>'}<h2>Рассмотрение вопросов и решения</h2>${resolutions || '<p>Проекты решений не поступили.</p>'}${meeting.notes ? `<h2>Дополнительные замечания</h2><p>${escapeDocumentText(meeting.notes)}</p>` : ''}<table class="meta" style="margin-top:36pt"><tr><td>Председательствующий<br><br>________________ / __________________</td><td>Секретарь<br><br>________________ / __________________</td></tr></table>`;
 }
 document.getElementById('download-agenda').addEventListener('click', () => {
   const agendaDocument = councilAgendaDocuments[activeAgenda];
@@ -347,6 +410,7 @@ const mediaChannel = 'BroadcastChannel' in globalThis ? new BroadcastChannel('ko
 function saveMediaDrafts(notify = true) {
   try {
     localStorage.setItem('kontur-media-drafts-v1', JSON.stringify(mediaDrafts));
+    renderAnalytics();
     if (notify) mediaChannel?.postMessage({ type: 'drafts-updated' });
     return true;
   } catch {
@@ -358,6 +422,7 @@ function activeDraft() {
   return mediaDrafts.find(item => item.id === activeDraftId);
 }
 function renderMediaDrafts() {
+  renderOverviewMedia();
   document.getElementById('media-draft-count').textContent = mediaDrafts.length;
   const list = document.getElementById('shared-drafts-list');
   list.replaceChildren();
@@ -416,6 +481,7 @@ function updateActiveDraft() {
   clearTimeout(mediaSaveTimer);
   mediaSaveTimer = setTimeout(() => {
     saveMediaDrafts();
+    renderOverviewMedia();
     state.textContent = 'Все изменения сохранены';
   }, 350);
 }
@@ -439,7 +505,7 @@ mediaChannel?.addEventListener('message', () => {
 window.addEventListener('storage', event => {
   if (event.key !== 'kontur-media-drafts-v1') return;
   const incoming = load('kontur-media-drafts-v1', []);
-  if (Array.isArray(incoming)) { mediaDrafts = incoming; renderMediaDrafts(); }
+  if (Array.isArray(incoming)) { mediaDrafts = incoming; renderMediaDrafts(); updateNotifications('media'); }
 });
 renderMediaDrafts();
 
@@ -451,12 +517,14 @@ document.getElementById('media-generator-form').addEventListener('submit', event
   const task = document.getElementById('publication-task').value.trim();
   const result = document.getElementById('publication-result').value.trim();
   const proof = document.getElementById('publication-proof').value.trim();
+  const comment = document.getElementById('publication-comment').value.trim();
   const title = `Поручение исполнено: ${task.charAt(0).toUpperCase()}${task.slice(1)}`;
   const paragraphs = [
     `${ministry} сообщает о результатах исполнения поручения, сформированного по итогам работы ${council}.`,
     `Поручение: ${task}.`,
     `Результат: ${result}.`,
     proof ? `Подтверждение: ${proof}.` : '',
+    comment ? `Комментарий: ${comment}` : '',
     'Материал подготовлен для последующей проверки и согласования перед публикацией.',
     '#РешенияСоветов #ЛНР'
   ].filter(Boolean);
@@ -493,12 +561,13 @@ document.getElementById('send-to-editing').addEventListener('click', () => {
   saveMediaDrafts();
   renderMediaDrafts();
   document.querySelector('[data-media-panel="editing"]').click();
+  updateNotifications('media');
 });
 
 const newsSources = [
   { id: 'culture', label: 'Культура', ministry: 'Министерство культуры ЛНР' },
   { id: 'sport', label: 'Спорт', ministry: 'Министерство спорта ЛНР' },
-  { id: 'education', label: 'Образование', ministry: 'Официальные новости сферы образования ЛНР' },
+  { id: 'education', label: 'Образование и наука', ministry: 'Министерство образования и науки ЛНР' },
   { id: 'youth', label: 'Молодежная политика', ministry: 'Министерство молодежной политики ЛНР' }
 ];
 let activeNewsFilter = 'all';
@@ -590,20 +659,6 @@ if (location.protocol !== 'file:') {
   setInterval(refreshNews, 5 * 60 * 1000);
 }
 
-// The overview uses illustrative cards; keep their labels aligned with the configured directory.
-const sampleYouthTask = document.querySelector('#task-list .task-row:nth-child(2)');
-if (sampleYouthTask) {
-  sampleYouthTask.dataset.search = 'программа молодежных инициатив молодежная политика';
-  sampleYouthTask.querySelector('.task-meta span').textContent = 'МОЛОДЕЖНАЯ ПОЛИТИКА';
-  sampleYouthTask.querySelector('h3').textContent = 'Согласовать программу молодежных инициатив';
-}
-const sampleMediaCircle = document.querySelector('.media-circles i:nth-child(3)');
-if (sampleMediaCircle) sampleMediaCircle.textContent = 'МП';
-const sampleMediaParagraph = document.querySelector('.media-item:nth-child(2) h3');
-if (sampleMediaParagraph) sampleMediaParagraph.textContent = 'Что изменилось для системы образования';
-const sampleMediaText = document.querySelector('.media-editor > p');
-if (sampleMediaText) sampleMediaText.textContent = 'В демонстрационном примере обсуждается доступность спортивной инфраструктуры. График ремонта объектов в районах приведён как пример оформления новости.';
-
 document.querySelector('#filter-risk')?.addEventListener('click', event => {
   const active = event.currentTarget.classList.toggle('active');
   document.querySelectorAll('#task-list .task-row').forEach(row => row.style.display = active && !row.classList.contains('risk') ? 'none' : 'flex');
@@ -617,6 +672,13 @@ document.querySelector('#global-search')?.addEventListener('input', event => {
 let activeTaskTab = 'all';
 let openedTaskRow = null;
 const taskDetailModal = document.getElementById('task-detail-modal');
+const councilNames = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
+const ministryCodes = {
+  'Министерство культуры ЛНР': 'culture',
+  'Министерство спорта ЛНР': 'sport',
+  'Министерство молодежной политики ЛНР': 'youth',
+  'Министерство образования и науки ЛНР': 'education'
+};
 const taskStatusView = {
   work: { label: 'В работе', pill: 'blue', priority: 'medium', symbol: '•' },
   risk: { label: 'Высокий риск', pill: 'red', priority: 'high', symbol: '!' },
@@ -625,11 +687,76 @@ const taskStatusView = {
 function taskRows() {
   return [...document.querySelectorAll('#full-task-list .task-record')];
 }
+function renderTaskRows() {
+  const list = document.getElementById('full-task-list');
+  taskRows().forEach(row => row.remove());
+  const empty = document.getElementById('task-empty');
+  tasks.forEach(task => {
+    const record = document.createElement('button');
+    record.type = 'button';
+    record.className = 'full-row task-record';
+    record.dataset.taskStatus = task.status || 'work';
+    record.dataset.taskMinistry = task.ministryCode || 'general';
+    record.dataset.taskCouncil = task.council;
+    record.dataset.taskId = task.id;
+    record.dataset.taskComment = task.comment || '';
+    const view = taskStatusView[record.dataset.taskStatus] || taskStatusView.work;
+    const main = document.createElement('div');
+    const priority = document.createElement('span');
+    priority.className = `priority ${view.priority}`;
+    priority.textContent = view.symbol;
+    const title = document.createElement('strong');
+    title.textContent = task.title;
+    const source = document.createElement('small');
+    source.textContent = `${councilNames[task.council]} · №${task.id}`;
+    main.append(priority, title, source);
+    const owner = document.createElement('span');
+    owner.textContent = task.owner || 'Не назначен';
+    const date = document.createElement('span');
+    date.textContent = task.deadline || 'Срок не задан';
+    const status = document.createElement('span');
+    status.className = `status-pill ${view.pill}`;
+    status.textContent = view.label;
+    record.append(main, owner, date, status);
+    list.insertBefore(record, empty);
+  });
+}
+function refreshOverview() {
+  const total = tasks.length;
+  const risk = tasks.filter(task => task.status === 'risk').length;
+  const done = tasks.filter(task => task.status === 'done').length;
+  const work = tasks.filter(task => task.status !== 'done').length;
+  document.getElementById('overview-count').textContent = total;
+  document.getElementById('tasks-count').textContent = total;
+  document.getElementById('overview-in-work').textContent = work;
+  document.getElementById('overview-risk').textContent = risk;
+  document.getElementById('overview-total').textContent = total;
+  document.getElementById('overview-done').innerHTML = `${total ? Math.round(done / total * 100) : 0}<span class="unit">%</span>`;
+  const overviewList = document.getElementById('task-list');
+  overviewList.replaceChildren();
+  const urgent = tasks.filter(task => task.status === 'risk');
+  if (!urgent.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty-state';
+    empty.textContent = total ? 'Нет поручений, требующих внимания.' : 'Поручения появятся после загрузки или создания конкретных записей.';
+    overviewList.append(empty);
+  } else {
+    urgent.forEach(task => {
+      const row = document.createElement('article');
+      row.className = 'task-row risk';
+      row.innerHTML = `<div class="priority high">!</div><div class="task-main"><div class="task-meta"><span>${councilNames[task.council]}</span><time>${task.deadline || 'срок не задан'}</time></div><h3></h3><p>Требует внимания ответственного.</p></div><span class="status-pill red">Высокий риск</span>`;
+      row.querySelector('h3').textContent = task.title;
+      overviewList.append(row);
+    });
+  }
+}
 function updateTaskCounters() {
   const rows = taskRows();
   const counts = {
     all: rows.length,
-    mine: rows.filter(row => row.dataset.taskScope === 'mine').length,
+    dnc: rows.filter(row => row.dataset.taskCouncil === 'dnc').length,
+    ssp: rows.filter(row => row.dataset.taskCouncil === 'ssp').length,
+    ntr: rows.filter(row => row.dataset.taskCouncil === 'ntr').length,
     risk: rows.filter(row => row.dataset.taskStatus === 'risk').length,
     done: rows.filter(row => row.dataset.taskStatus === 'done').length
   };
@@ -644,7 +771,7 @@ function applyTaskFilters() {
   let visible = 0;
   taskRows().forEach(row => {
     const tabMatch = activeTaskTab === 'all'
-      || (activeTaskTab === 'mine' && row.dataset.taskScope === 'mine')
+      || ['dnc', 'ssp', 'ntr'].includes(activeTaskTab) && row.dataset.taskCouncil === activeTaskTab
       || (activeTaskTab === 'risk' && row.dataset.taskStatus === 'risk')
       || (activeTaskTab === 'done' && row.dataset.taskStatus === 'done');
     const ministryMatch = ministry === 'all' || row.dataset.taskMinistry === ministry;
@@ -688,6 +815,7 @@ function openTaskDetails(row) {
   document.getElementById('task-detail-owner').textContent = row.children[1].textContent;
   document.getElementById('task-detail-date').textContent = row.children[2].textContent;
   document.getElementById('task-detail-status').textContent = taskStatusView[row.dataset.taskStatus].label;
+  document.getElementById('task-detail-comment').value = row.dataset.taskComment || '';
   taskDetailModal.classList.add('show');
 }
 document.getElementById('full-task-list').addEventListener('click', event => {
@@ -708,11 +836,27 @@ document.querySelectorAll('[data-set-task-status]').forEach(button => button.add
   pill.className = `status-pill ${view.pill}`;
   pill.textContent = view.label;
   document.getElementById('task-detail-status').textContent = view.label;
+  const task = tasks.find(item => item.id === openedTaskRow.dataset.taskId);
+  if (task) {
+    task.status = status;
+    task.comment = document.getElementById('task-detail-comment').value.trim();
+    saveTasks();
+  }
+  renderTaskRows();
+  refreshOverview();
   updateTaskCounters();
   applyTaskFilters();
 }));
+document.getElementById('task-detail-comment').addEventListener('input', event => {
+  if (!openedTaskRow) return;
+  openedTaskRow.dataset.taskComment = event.target.value;
+  const task = tasks.find(item => item.id === openedTaskRow.dataset.taskId);
+  if (task) { task.comment = event.target.value; saveTasks(); }
+});
+renderTaskRows();
 updateTaskCounters();
 applyTaskFilters();
+refreshOverview();
 
 const modal = document.querySelector('#modal');
 function openModal() { modal.classList.add('show'); setTimeout(() => document.querySelector('#task-title').focus(), 100); }
@@ -723,66 +867,25 @@ document.querySelector('#create-task').addEventListener('click', () => {
   const title = document.querySelector('#task-title').value.trim();
   if (!title) { document.querySelector('#task-title').focus(); return; }
   const createdFromTasks = document.getElementById('tasks-view').classList.contains('active');
-  modal.classList.remove('show');
-  const row = document.createElement('article');
-  row.className = 'task-row';
-  row.dataset.search = title.toLowerCase();
-  const priority = document.createElement('div');
-  priority.className = 'priority medium';
-  priority.textContent = '•';
-  const main = document.createElement('div');
-  main.className = 'task-main';
-  const meta = document.createElement('div');
-  meta.className = 'task-meta';
-  meta.textContent = document.querySelector('#task-ministry').value.toUpperCase();
-  const heading = document.createElement('h3');
-  heading.textContent = title;
-  const detail = document.createElement('p');
-  detail.textContent = 'Создано только что · ожидает принятия в работу';
-  main.append(meta, heading, detail);
-  const status = document.createElement('span');
-  status.className = 'status-pill blue';
-  status.textContent = 'Новое';
-  row.append(priority, main, status);
-  document.querySelector('#task-list').prepend(row);
   const ministryName = document.querySelector('#task-ministry').value;
-  const ministryCodes = {
-    'Министерство культуры': 'culture',
-    'Министерство спорта': 'sport',
-    'Министерство молодежной политики': 'youth',
-    'Министерство образования': 'education'
-  };
   const council = document.getElementById('task-council-create').value;
-  const councilNames = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
-  const owner = document.getElementById('task-owner').value;
+  const ownerValue = document.getElementById('task-owner').value;
   const deadlineValue = document.getElementById('task-deadline').value;
-  const deadline = deadlineValue ? new Date(`${deadlineValue}T00:00:00`).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }) : 'Срок не задан';
-  const record = document.createElement('button');
-  record.type = 'button';
-  record.className = 'full-row task-record';
-  record.dataset.taskStatus = 'work';
-  record.dataset.taskScope = owner === 'Лариса Яковлевна' ? 'mine' : 'team';
-  record.dataset.taskMinistry = ministryCodes[ministryName] || 'general';
-  record.dataset.taskCouncil = council;
-  record.dataset.taskId = `П-${String(Date.now()).slice(-3)}`;
-  const recordMain = document.createElement('div');
-  const recordPriority = document.createElement('span');
-  recordPriority.className = 'priority medium';
-  recordPriority.textContent = '•';
-  const recordTitle = document.createElement('strong');
-  recordTitle.textContent = title;
-  const recordSource = document.createElement('small');
-  recordSource.textContent = `${councilNames[council]} · №${record.dataset.taskId}`;
-  recordMain.append(recordPriority, recordTitle, recordSource);
-  const recordOwner = document.createElement('span');
-  recordOwner.textContent = owner === 'Выберите исполнителя' ? 'Не назначен' : owner;
-  const recordDate = document.createElement('span');
-  recordDate.textContent = deadline;
-  const recordStatus = document.createElement('span');
-  recordStatus.className = 'status-pill blue';
-  recordStatus.textContent = 'В работе';
-  record.append(recordMain, recordOwner, recordDate, recordStatus);
-  document.getElementById('task-empty').before(record);
+  const task = {
+    id: `П-${String(Date.now()).slice(-3)}`,
+    title,
+    ministryCode: ministryCodes[ministryName] || 'general',
+    council,
+    owner: ownerValue === 'Выберите исполнителя' ? 'Не назначен' : ownerValue,
+    deadline: deadlineValue ? new Date(`${deadlineValue}T00:00:00`).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }) : 'Срок не задан',
+    status: 'work',
+    comment: ''
+  };
+  tasks.push(task);
+  if (!saveTasks()) { tasks.pop(); return; }
+  modal.classList.remove('show');
+  renderTaskRows();
+  refreshOverview();
   updateTaskCounters();
   applyTaskFilters();
   document.querySelector('#task-title').value = '';
@@ -796,5 +899,96 @@ document.addEventListener('keydown', event => {
   if (event.key === 'Escape') { modal.classList.remove('show'); taskDetailModal.classList.remove('show'); }
 });
 
+function renderOverviewMedia() {
+  document.getElementById('overview-media-count').textContent = mediaDrafts.length;
+  const container = document.getElementById('overview-media-items');
+  container.replaceChildren();
+  if (!mediaDrafts.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty-state';
+    empty.textContent = 'Материалов пока нет. Передайте текст на редактирование в медиа-мастерской.';
+    container.append(empty);
+    return;
+  }
+  const latest = mediaDrafts.slice().sort((a, b) => (Date.parse(b.updated) || 0) - (Date.parse(a.updated) || 0));
+  latest.slice(0, 3).forEach(draft => {
+    const row = document.createElement('div');
+    row.className = 'media-next';
+    const body = document.createElement('div');
+    const meta = document.createElement('small');
+    meta.textContent = `${draft.ministry || 'Министерство не указано'} · ${draft.status || 'Черновик'}`;
+    const title = document.createElement('strong');
+    title.textContent = draft.title || 'Без заголовка';
+    body.append(meta, title);
+    row.append(body);
+    container.append(row);
+  });
+}
+function analyticsData() {
+  const savedTasks = load('kontur-tasks-v1', []);
+  const savedDrafts = load('kontur-media-drafts-v1', []);
+  const actualTasks = Array.isArray(savedTasks) ? savedTasks.filter(item => item && typeof item === 'object') : [];
+  const actualDrafts = Array.isArray(savedDrafts) ? savedDrafts.filter(item => item && typeof item === 'object') : [];
+  const done = actualTasks.filter(task => task.status === 'done').length;
+  return { tasks: actualTasks, total: actualTasks.length, done, percent: actualTasks.length ? Math.round(done / actualTasks.length * 100) : 0, media: actualDrafts.length };
+}
+function renderAnalytics() {
+  const data = analyticsData();
+  document.getElementById('analytics-tasks').textContent = data.total;
+  document.getElementById('analytics-done').textContent = data.percent;
+  document.getElementById('analytics-done-detail').textContent = `Исполнено ${data.done} из ${data.total}`;
+  document.getElementById('analytics-media').textContent = data.media;
+  const container = document.getElementById('analytics-recommendations');
+  container.replaceChildren();
+  const signals = [];
+  for (const task of data.tasks) {
+    if (task.status === 'done') continue;
+    if (!task.owner || task.owner === 'Не назначен' || task.owner === 'Выберите исполнителя') {
+      signals.push({ title: `Назначить ответственного: ${task.title || 'Поручение'}`, text: 'У этого поручения не назначен исполнитель.' });
+    }
+    if (task.status === 'risk') {
+      signals.push({ title: `Проверить исполнение: ${task.title || 'Поручение'}`, text: 'Поручение отмечено статусом риска. Уточните срок и ход исполнения.' });
+    }
+  }
+  if (!signals.length) {
+    const empty = document.createElement('p');
+    empty.className = 'empty-state';
+    empty.textContent = data.total || data.media ? 'По текущим поручениям нет сигналов риска или отсутствия ответственного.' : 'Данных пока нет. Показатели появятся по мере работы платформы.';
+    container.append(empty);
+  }
+  signals.forEach((signal, index) => {
+    const row = document.createElement('div');
+    row.className = 'recommendation';
+    const number = document.createElement('span');
+    number.className = 'rec-number';
+    number.textContent = String(index + 1).padStart(2, '0');
+    const body = document.createElement('div');
+    const title = document.createElement('strong');
+    title.textContent = signal.title;
+    const text = document.createElement('p');
+    text.textContent = signal.text;
+    body.append(title, text);
+    const button = document.createElement('button');
+    button.className = 'text-button';
+    button.textContent = 'К поручениям →';
+    button.addEventListener('click', () => showView('tasks'));
+    row.append(number, body, button);
+    container.append(row);
+  });
+}
+window.addEventListener('storage', event => {
+  if (event.key === null || ['kontur-tasks-v1', 'kontur-media-drafts-v1'].includes(event.key)) renderAnalytics();
+});
+document.getElementById('download-analytics').addEventListener('click', () => {
+  const data = analyticsData();
+  const report = `Отчет РИТМ — ${new Date().toLocaleString('ru-RU')}\n\nВсего поручений: ${data.total}\nИсполнено: ${data.done}\nДоля исполненных: ${data.percent}%\nМедиаматериалы: ${data.media}\n`;
+  const url = URL.createObjectURL(new Blob([report], { type: 'text/plain;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'Аналитика РИТМ.txt';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+renderAnalytics();
 const requestedView = window.location.hash.slice(1);
 if (labels[requestedView]) showView(requestedView);
