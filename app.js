@@ -178,7 +178,7 @@ function renderCouncilInfo() {
   if (!tabs) return;
   tabs.replaceChildren();
   const shortNames = { ntr: 'Совет НТР', ssp: 'Совет ССП', dnc: 'Совет ДНЦ' };
-  Object.keys(councils).forEach(key => { const tab = document.createElement('button'); tab.type = 'button'; tab.className = `council-info-tab ${key === activeCouncilInfo ? 'active' : ''}`; tab.textContent = shortNames[key]; tab.setAttribute('aria-selected', String(key === activeCouncilInfo)); tab.addEventListener('click', () => { activeCouncilInfo = key; renderCouncilInfo(); }); tabs.append(tab); });
+  Object.keys(councils).forEach(key => { const tab = document.createElement('button'); tab.type = 'button'; tab.className = `council-info-tab ${key === activeCouncilInfo ? 'active' : ''}`; tab.textContent = shortNames[key]; tab.setAttribute('aria-selected', String(key === activeCouncilInfo)); tab.addEventListener('click', () => { activeCouncilInfo = key; renderCouncilInfo(); renderCouncilTasks(); }); tabs.append(tab); });
   const info = councilInfo[activeCouncilInfo];
   document.getElementById('council-info-powers-field').hidden = activeCouncilInfo === 'dnc';
   document.getElementById('council-info-commission-rules-field').hidden = activeCouncilInfo === 'ssp';
@@ -255,6 +255,7 @@ function saveTasks() {
     renderAnalytics();
     renderTaskCalendar();
     refreshCalendarSelection();
+    renderCouncilTasks();
     return true;
   } catch {
     alert('Не удалось сохранить поручения в этом браузере.');
@@ -454,6 +455,28 @@ function taskCalendarStatus(task) {
   return task.status === 'risk' || localDateKey(task.deadlineISO) && task.deadlineISO < today
     ? { className: 'task-overdue', label: 'Просрочено' }
     : { className: 'task-open', label: 'Не исполнено' };
+}
+function renderCouncilTasks() {
+  const list = document.getElementById('council-task-list');
+  if (!list || typeof tasks === 'undefined') return;
+  list.replaceChildren();
+  const councilTasks = tasks.filter(task => task.council === activeCouncilInfo).map((task, index) => {
+    const state = taskCalendarStatus(task);
+    const order = state.className === 'task-overdue' ? 0 : state.className === 'task-open' ? 1 : 2;
+    return { task, state, order, index };
+  }).sort((a, b) => a.order - b.order || String(a.task.deadlineISO || '9999-12-31').localeCompare(String(b.task.deadlineISO || '9999-12-31')) || a.index - b.index);
+  if (!councilTasks.length) {
+    const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'Для выбранного Совета поручений пока нет.'; list.append(empty); return;
+  }
+  councilTasks.forEach(({ task, state }) => {
+    const row = document.createElement('article'); row.className = `council-task-row ${state.className}`;
+    const main = document.createElement('div'); main.className = 'council-task-main';
+    const title = document.createElement('h3'); title.textContent = task.title || 'Поручение без названия';
+    const meta = document.createElement('p'); meta.textContent = `${task.owner || 'Ответственный не назначен'} · ${task.deadline || 'Срок не задан'}`;
+    main.append(title, meta);
+    const status = document.createElement('span'); status.className = `status-pill ${state.className === 'task-overdue' ? 'red' : state.className === 'task-done' ? 'green' : 'amber'}`; status.textContent = state.label;
+    row.append(main, status); list.append(row);
+  });
 }
 function refreshCalendarSelection() {
   renderMeetingsCalendar();
@@ -1420,5 +1443,6 @@ document.getElementById('download-analytics').addEventListener('click', () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 renderAnalytics();
+renderCouncilTasks();
 const requestedView = window.location.hash.slice(1);
 if (labels[requestedView]) showView(requestedView);

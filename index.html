@@ -383,6 +383,13 @@
             <label>Дополнительная информация<textarea id="council-info-notes" rows="5" maxlength="4000" placeholder="Контакты, порядок работы, ссылки и другие сведения"></textarea></label>
             <div class="calendar-form-actions"><button type="submit" class="primary-button small">Сохранить информацию</button><button type="button" class="outline-button" id="council-info-reset">Восстановить исходные данные</button></div><p class="form-hint" id="council-info-message" role="status"></p>
           </form>
+          <section class="panel council-tasks-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">КОНТРОЛЬ ИСПОЛНЕНИЯ</p><h2>Поручения Совета</h2><p>Просроченные поручения находятся сверху, затем текущие и исполненные.</p></div>
+              <div class="council-task-legend"><span class="council-task-legend-overdue">Просрочено</span><span class="council-task-legend-open">Не исполнено</span><span class="council-task-legend-done">Исполнено</span></div>
+            </div>
+            <div id="council-task-list" class="council-task-list"></div>
+          </section>
         </section>
         <section class="page-view" id="decisions-view">
           <div class="page-heading"><div><p class="eyebrow">РАБОЧИЙ ДОКУМЕНТ</p><h1>Проект решений</h1><p class="lede">Подготовьте ответственного, срок и поручения отдельно для каждого Совета. Данные сохраняются в браузере и автоматически отображаются в его сводном протоколе.</p></div></div>
