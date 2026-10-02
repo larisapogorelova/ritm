@@ -23,7 +23,7 @@ document.querySelectorAll('[data-ministry-councils]').forEach(button => button.a
   }
 }));
 const pageLabel = document.querySelector('#page-label');
-const labels = { overview: 'Обзор', tasks: 'Поручения', agenda: 'Повестка', protocols: 'Сводные протоколы', media: 'Медиа-мастерская', analytics: 'Аналитика' };
+const labels = { overview: 'Обзор', councils: 'Информация о Советах', tasks: 'Поручения', agenda: 'Повестка', protocols: 'Сводные протоколы', media: 'Медиа-мастерская', analytics: 'Аналитика' };
 const councils = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
 const councilDescriptions = {
   ntr: 'Вопросы научно-технологического развития, инноваций и внедрения решений.',
@@ -63,6 +63,112 @@ function load(key, fallback) {
     return fallback;
   }
 }
+const defaultCouncilInfo = {
+  ntr: {
+    name: 'Совет по научно-технологическому развитию Луганской Народной Республики (Совет НТР)',
+    chair: 'Глава ЛНР (общее руководство, созыв заседаний, утверждение повестки, подписание протоколов)',
+    secretary: 'Представитель Министерства образования и науки ЛНР',
+    schedule: 'Совет и Коллегия ректоров собираются не реже двух раз в год',
+    description: 'Цель — формирование единого научно-технологического пространства в ЛНР, решение региональных задач, привлечение инвестиций в научно-технологическую сферу.\n\nОсновные задачи Совета:\n• Выработка рекомендаций по формированию и реализации направлений научно-технологического развития ЛНР, развития интеллектуальной собственности.\n• Определение приоритетных направлений научной и научно-технологической деятельности, приоритетных отраслевых задач для научно-образовательного комплекса.\n• Разработка предложений по проектам законов и нормативных актов в научно-технологической сфере.\n\nФункции Совета:\n• Формирование предложений по государственной программе научно-технологического развития ЛНР и плану её мероприятий.\n• Подготовка предложений по концепции научно-технологического развития и стратегически значимых решений.\n• Рассмотрение научных программ и проектов на соответствие приоритетным направлениям.\n• Рассмотрение планов и результатов работы ответственных исполнителей.\n• Подготовка предложений по совершенствованию правовых и экономических механизмов, стимулированию коммерциализации научной продукции, развитию наукоёмких предприятий и привлечению инвестиций.',
+    notes: 'Полномочия Совета:\n• Принимает решения и направляет предложения органам государственной власти ЛНР.\n• Запрашивает информацию у территориальных органов федеральных органов власти, исполнительных органов ЛНР, вузов.\n• Приглашает на заседания руководителей организаций реального сектора экономики, финансово-кредитных организаций, научных и образовательных учреждений.\n• Привлекает экспертов на безвозмездной основе, создаёт рабочие группы.\n\nСостав и организация работы:\n• Заместитель председателя — заместитель Председателя Правительства ЛНР, ответственный за научно-технологическое развитие.\n• Ответственный секретарь — представитель Министерства образования и науки ЛНР: подготовка материалов, ведение протоколов, оповещение членов.\n• В состав Совета могут входить представители органов власти, ректоры вузов, научные деятели, руководители предприятий, финансово-кредитных организаций и общественных объединений.\n• Персональный состав утверждается распоряжением Главы ЛНР. Члены Совета работают на безвозмездной основе.\n\nПрезидиум Совета создаётся для координации и решения оперативных вопросов. Он включает председателя, заместителя председателя, ответственного секретаря и иных членов, может созывать заседания без участия всех членов Совета. Решения президиума направляются остальным членам Совета в течение 5 рабочих дней.\n\nКоллегия ректоров формируется из числа членов Совета — ректоров вузов ЛНР. Направления её деятельности: рекомендации по политике в высшем образовании, развитие науки и материально-технической базы вузов, координация комплексных научных программ, организация конференций и семинаров, интеграция вузов с научными, производственными и финансовыми организациями, экспертиза нормативных актов и научно-технологических программ.\n\nПорядок проведения заседаний: заседание правомочно при участии не менее 50% членов; заседания проводятся очно, при решении председательствующего допускается дистанционный формат; решения принимаются открытым голосованием; при равенстве голосов решающим является голос председательствующего. Протокол подписывается председательствующим и ответственным секретарём. Члены Совета, не согласные с решением, вправе выразить особое мнение в письменной форме. Для решения задач Совета могут формироваться рабочие группы с указанием руководителя.'
+  },
+  ssp: {
+    name: 'Совет при Правительстве Луганской Народной Республики по социальному партнёрству в сфере занятости молодёжи (Совет ССП)',
+    chair: 'Председатель Правительства ЛНР',
+    secretary: 'Представитель Министерства образования и науки ЛНР',
+    schedule: 'Не реже двух раз в год, в очной форме (допускается дистанционный формат)',
+    goal: 'Цель — создание эффективной системы социального партнёрства между органами власти, работодателями, профсоюзами, образовательными организациями для скоординированных мер по содействию занятости молодёжи и устойчивому социально-экономическому развитию ЛНР.',
+    tasks: '• Создание единой системы профориентации.\n• Предложения работодателям по достойным условиям труда для молодёжи.\n• Содействие трудоустройству, развитию молодёжного предпринимательства и самозанятости.\n• Совершенствование мотивации работодателей.\n• Организация информирования выпускников и родителей о потребностях рынка труда.\n• Сотрудничество в вопросах производственной практики, целевого обучения, трудоустройства.\n• Привлечение студенческих и трудовых отрядов подростков к занятости в каникулярный период.\n• Популяризация востребованных профессий и системы непрерывного образования.',
+    functions: '• Анализ запросов рынка труда ЛНР.\n• Разработка инновационных рекомендаций по взаимодействию системы СПО, ВО и рынка труда.\n• Подготовка предложений по актуализации образовательных программ с учётом потребностей рынка труда.\n• Подготовка предложений по организации производственных практик и стажировок.\n• Планирование профильной ориентации среднего общего образования.\n• Содействие выпускникам в получении первого места работы.\n• Создание условий для временного трудоустройства обучающихся в составе студенческих и трудовых отрядов.',
+    powers: '• Разработка и представление предложений по совершенствованию государственной политики в сфере труда.\n• Запрос и получение материалов от федеральных органов, исполнительных органов ЛНР, органов местного самоуправления, образовательных организаций, профсоюзов и объединений работодателей.\n• Приглашение на заседания должностных лиц и представителей организаций.\n• Привлечение на безвозмездной основе научных, образовательных организаций и экспертов.\n• Использование банков данных органов государственной власти ЛНР.\n• Образование экспертных, консультативных и рабочих групп.',
+    organization: '• Председатель — Председатель Правительства ЛНР: определяет план работы и повестку, руководит Советом, созывает заседания, координирует реализацию решений.\n• Заместитель председателя — заместитель Председателя Правительства ЛНР, координирующий вопросы культуры, молодёжной политики, спорта, образования и науки.\n• Ответственный секретарь — представитель Министерства образования и науки ЛНР: готовит материалы, оповещает участников, ведёт протоколы и рассылает решения.\n• Члены Совета работают на безвозмездной основе.\n• Состав Совета и комиссий формируется Минобрнауки ЛНР и утверждается распоряжением Правительства ЛНР.\n• План работы принимается на календарный год и утверждается протоколом заседания.\n• Кворум — не менее 50% членов; решения принимаются открытым голосованием не менее половины голосов присутствующих. При равенстве голос председательствующего является решающим.\n• Члены Совета, не согласные с решением, вправе подать особое мнение в письменной форме.',
+    commissions: 'Комиссии Совета работают по четырём направлениям и обеспечивают подготовку предложений в сфере занятости молодёжи.',
+    commission1: '1. Комиссия по вопросам СПО, прогнозирования и координации подготовки квалифицированных рабочих и специалистов среднего звена:\n• рассмотрение контрольных цифр приёма на обучение по программам СПО (сентябрь–октябрь предшествующего года);\n• координация действий образовательных организаций, работодателей, службы занятости;\n• разработка предложений по изменению квалификационной структуры трудовых ресурсов;\n• привлечение дополнительного финансирования для материально-технической базы СПО;\n• разработка региональной стратегии кадрового обеспечения;\n• организация чемпионатных движений и трудоустройства победителей;\n• координация кластеров федерального проекта «Профессионалитет» — мониторинг, согласование программ, подготовка рекомендаций Минпросвещения РФ;\n• развитие системы профориентации и маршрутизации молодёжи к работодателям.',
+    commission2: '2. Комиссия по вопросам трудоустройства молодёжи и взаимодействия с образовательными организациями:\n• рекомендации по профориентационной работе с молодёжью;\n• рекомендации по организации целевого обучения;\n• рекомендации по развитию практико-ориентированного обучения, практик и стажировок;\n• маршрутизация выпускников на предприятия;\n• предложения работодателям по сопровождению молодых специалистов;\n• методологическое сопровождение системы наставничества;\n• консультативная помощь выпускникам при проблемах с трудоустройством.',
+    commission3: '3. Комиссия по развитию движения студенческих отрядов (СО) и трудовых отрядов подростков (ТОП):\n• предложения по созданию СО и ТОП в образовательных организациях;\n• определение видов и объёмов работ для СО и ТОП;\n• обучение командных составов и участников;\n• содействие участию в межрегиональных и всероссийских трудовых проектах;\n• поддержка в проведении республиканских и участии во всероссийских акциях.',
+    commission4: '4. Комиссия по вопросам профессионального обучения учащихся 10–11-х классов:\n• формирование перечня программ профессиональной подготовки для учащихся 10–11-х классов;\n• организация обучения по программам профподготовки с учётом потребностей рынка труда;\n• координация летней практики на предприятиях;\n• выработка единой модели итоговой аттестации в форме квалификационного экзамена;\n• рекомендации работодателям по трудоустройству учащихся после получения среднего общего образования.',
+    composition: 'В комиссии Совета входят представители:\n• Минобразования и науки ЛНР, Минздрава ЛНР, Минимущества ЛНР, Мининфраструктуры и транспорта ЛНР, МВД по ЛНР и других министерств;\n• образовательных организаций высшего и среднего профессионального образования;\n• организаций различных организационно-правовых форм (работодатели);\n• Луганского регионального объединения «Союз машиностроителей России»;\n• АНО «Россия — страна возможностей»;\n• Республиканского центра занятости населения;\n• Дома молодёжи;\n• регионального штаба «Российские студенческие отряды»;\n• Федерации профессиональных союзов ЛНР;\n• руководителей общеобразовательных и профессиональных образовательных организаций;\n• администраций городских округов (по молодёжной политике).',
+    support: 'Организационно-техническое сопровождение Совета осуществляет Министерство образования и науки ЛНР.',
+    sourceVersion: 2,
+    description: councilDescriptions.ssp,
+    notes: ''
+  },
+  dnc: {
+    name: 'Совет по защите традиционных российских духовно-нравственных ценностей, культуры и исторической памяти при Главе Луганской Народной Республики (Совет ДНЦ)',
+    chair: 'Глава ЛНР',
+    secretary: 'Ответственный секретарь Совета',
+    schedule: 'Не реже одного раза в квартал; допускаются заочный формат и видеоконференцсвязь',
+    goal: '• Укрепление традиционных российских духовно-нравственных ценностей, сохранение культуры и исторической памяти.\n• Координация взаимодействия госорганов, местного самоуправления, НКО, научного и экспертного сообщества.\n• Разработка инициатив и механизмов решения проблем в сфере государственной политики по сохранению традиционных ценностей.\n• Продвижение достижений российской культуры.\n• Противодействие фальсификации исторических событий и фактов.',
+    tasks: '• Подготовка предложений по реализации госорганами и органами местного самоуправления функций в сфере сохранения традиционных ценностей.\n• Популяризация традиционных ценностей в массовом сознании и СМИ.\n• Содействие в разработке ведомственных планов мероприятий.\n• Участие в программах популяризации российской культуры и исторического наследия.\n• Привлечение научных и исследовательских организаций.',
+    functions: '• Разработка методических рекомендаций по реализации политики сохранения традиционных ценностей на территории ЛНР.\n• Рассмотрение предложений госорганов, НКО, экспертного сообщества.\n• Вынесение предложений по разработке нормативных актов и документов стратегического планирования.\n• Анализ эффективности реализации государственной политики в данной сфере.',
+    organization: '• Председатель — Глава ЛНР.\n• Два заместителя председателя.\n• Ответственный секретарь обеспечивает подготовку и проведение заседаний, решает текущие вопросы.\n• Члены Совета участвуют на общественных началах.\n• В состав могут входить представители госорганов, местного самоуправления, НКО, религиозных организаций, научного и экспертного сообществ.\n• Состав утверждается распоряжением Главы ЛНР.\n• Кворум — более половины членов; решения принимаются простым большинством голосов, при равенстве голос решающий у председательствующего.',
+    commissions: 'Постоянно действующие комиссии:\n• по патриотическому воспитанию, вовлечению в спорт и подготовке к военной службе;\n• по выявлению и поддержке талантливых и одарённых детей и молодёжи;\n• по формированию и укреплению семейных ценностей;\n• по развитию добровольчества, волонтёрства и взаимодействию с социально ориентированными НКО;\n• по научно-методическому обеспечению государственной политики по сохранению традиционных ценностей;\n• по формированию и продвижению ценностно-ориентированного медиаконтента;\n• по духовно-нравственному воспитанию.',
+    commissionRules: 'Комиссии могут быть постоянными и временными; создаются решением Совета при исполнительном органе ЛНР.\n\nСостав — от 10 до 30 человек; утверждается правовым актом соответствующего исполнительного органа.\n\nПредседатель, заместитель и секретарь избираются открытым голосованием на первом заседании. Заседания проводятся не реже одного раза в квартал, очно или дистанционно; кворум — не менее половины членов.\n\nРешения принимаются простым большинством голосов и оформляются протоколами за подписью председателя и секретаря. Члены комиссии работают на добровольных началах без права делегирования полномочий. К заседаниям могут привлекаться лица, не входящие в состав комиссии. Протоколы и материалы комиссий могут обнародоваться только по решению Совета.',
+    support: 'Обеспечение деятельности Совета возлагается на Министерство культуры ЛНР.',
+    description: councilDescriptions.dnc,
+    notes: ''
+  }
+};
+function councilSection(text, start, end = '') {
+  const from = text.indexOf(start);
+  if (from < 0) return '';
+  const content = text.slice(from + start.length);
+  const to = end ? content.indexOf(end) : -1;
+  return (to < 0 ? content : content.slice(0, to)).trim();
+}
+const ntrDefault = defaultCouncilInfo.ntr;
+ntrDefault.goal = ntrDefault.description.split('\n\nОсновные задачи Совета:')[0].trim();
+ntrDefault.tasks = councilSection(ntrDefault.description, 'Основные задачи Совета:', 'Функции Совета:');
+ntrDefault.functions = councilSection(ntrDefault.description, 'Функции Совета:');
+ntrDefault.powers = councilSection(ntrDefault.notes, 'Полномочия Совета:', 'Состав и организация работы:');
+ntrDefault.organization = councilSection(ntrDefault.notes, 'Состав и организация работы:', 'Президиум Совета');
+ntrDefault.notes = councilSection(ntrDefault.notes, 'Президиум Совета');
+ntrDefault.support = 'Организационно-техническое сопровождение Совета осуществляет Министерство образования и науки ЛНР.';
+Object.keys(defaultCouncilInfo).forEach(key => { const info = defaultCouncilInfo[key]; info.goal ||= info.description || ''; info.tasks ||= ''; info.functions ||= ''; info.powers ||= ''; info.organization ||= ''; info.commissions ||= ''; info.commissionRules ||= ''; info.commission1 ||= ''; info.commission2 ||= ''; info.commission3 ||= ''; info.commission4 ||= ''; info.composition ||= ''; info.support ||= ''; });
+const storedCouncilInfo = load('ritm-council-info-v1', {});
+const councilInfo = Object.fromEntries(Object.keys(defaultCouncilInfo).map(key => [key, { ...defaultCouncilInfo[key], ...(storedCouncilInfo[key] || {}) }]));
+let activeCouncilInfo = 'ntr';
+function saveCouncilInfo() { try { localStorage.setItem('ritm-council-info-v1', JSON.stringify(councilInfo)); return true; } catch { return false; } }
+if (!storedCouncilInfo.ssp?.sourceVersion || storedCouncilInfo.ssp.sourceVersion < 2) { councilInfo.ssp = { ...defaultCouncilInfo.ssp, sourceVersion: 2 }; saveCouncilInfo(); }
+function renderCouncilInfo() {
+  const tabs = document.getElementById('council-info-tabs');
+  if (!tabs) return;
+  tabs.replaceChildren();
+  const shortNames = { ntr: 'Совет НТР', ssp: 'Совет ССП', dnc: 'Совет ДНЦ' };
+  Object.keys(councils).forEach(key => { const tab = document.createElement('button'); tab.type = 'button'; tab.className = `council-info-tab ${key === activeCouncilInfo ? 'active' : ''}`; tab.textContent = shortNames[key]; tab.setAttribute('aria-selected', String(key === activeCouncilInfo)); tab.addEventListener('click', () => { activeCouncilInfo = key; renderCouncilInfo(); }); tabs.append(tab); });
+  const info = councilInfo[activeCouncilInfo];
+  document.getElementById('council-info-powers-field').hidden = activeCouncilInfo === 'dnc';
+  document.getElementById('council-info-commission-rules-field').hidden = activeCouncilInfo === 'ssp';
+  const councilShortNames = { ntr: 'НТР', ssp: 'ССП', dnc: 'ДНЦ' };
+  document.getElementById('council-info-eyebrow').textContent = `СОВЕТ ${councilShortNames[activeCouncilInfo]}`;
+  document.getElementById('council-info-title').textContent = info.name || councils[activeCouncilInfo];
+  document.getElementById('council-info-name').value = info.name || '';
+  document.getElementById('council-info-chair').value = info.chair || '';
+  document.getElementById('council-info-secretary').value = info.secretary || '';
+  document.getElementById('council-info-schedule').value = info.schedule || '';
+  document.getElementById('council-info-goal').value = info.goal || info.description || '';
+  document.getElementById('council-info-tasks').value = info.tasks || '';
+  document.getElementById('council-info-functions').value = info.functions || '';
+  document.getElementById('council-info-powers').value = info.powers || '';
+  document.getElementById('council-info-organization').value = info.organization || '';
+  document.getElementById('council-info-commissions').value = info.commissions || '';
+  document.getElementById('council-info-commission-rules').value = info.commissionRules || '';
+  document.getElementById('council-info-commission-1').value = info.commission1 || '';
+  document.getElementById('council-info-commission-2').value = info.commission2 || '';
+  document.getElementById('council-info-commission-3').value = info.commission3 || '';
+  document.getElementById('council-info-commission-4').value = info.commission4 || '';
+  document.getElementById('council-info-composition').value = info.composition || '';
+  document.getElementById('council-info-support').value = info.support || '';
+  document.getElementById('council-info-notes').value = info.notes || '';
+  ['name', 'chair', 'secretary', 'schedule', 'goal', 'tasks', 'functions', 'powers', 'organization', 'commissions', 'commission-rules', 'commission-1', 'commission-2', 'commission-3', 'commission-4', 'composition', 'support', 'notes'].forEach(id => {
+    const field = document.getElementById(`council-info-${id}`);
+    const wrapper = field?.closest('label');
+    if (wrapper) wrapper.hidden = !field.value.trim();
+  });
+}
+document.getElementById('council-info-form')?.addEventListener('submit', event => { event.preventDefault(); const info = councilInfo[activeCouncilInfo]; Object.assign(info, { name: document.getElementById('council-info-name').value.trim(), chair: document.getElementById('council-info-chair').value.trim(), secretary: document.getElementById('council-info-secretary').value.trim(), schedule: document.getElementById('council-info-schedule').value.trim(), goal: document.getElementById('council-info-goal').value.trim(), tasks: document.getElementById('council-info-tasks').value.trim(), functions: document.getElementById('council-info-functions').value.trim(), powers: document.getElementById('council-info-powers').value.trim(), organization: document.getElementById('council-info-organization').value.trim(), commissions: document.getElementById('council-info-commissions').value.trim(), commissionRules: document.getElementById('council-info-commission-rules').value.trim(), commission1: document.getElementById('council-info-commission-1').value.trim(), commission2: document.getElementById('council-info-commission-2').value.trim(), commission3: document.getElementById('council-info-commission-3').value.trim(), commission4: document.getElementById('council-info-commission-4').value.trim(), composition: document.getElementById('council-info-composition').value.trim(), support: document.getElementById('council-info-support').value.trim(), notes: document.getElementById('council-info-notes').value.trim() }); if (saveCouncilInfo()) { renderCouncilInfo(); document.getElementById('council-info-message').textContent = 'Информация сохранена.'; } else document.getElementById('council-info-message').textContent = 'Не удалось сохранить информацию в этом браузере.'; });
+document.getElementById('council-info-reset')?.addEventListener('click', () => { councilInfo[activeCouncilInfo] = { ...defaultCouncilInfo[activeCouncilInfo] }; saveCouncilInfo(); renderCouncilInfo(); document.getElementById('council-info-message').textContent = 'Исходные данные восстановлены.'; });
+renderCouncilInfo();
 const notificationKey = 'ritm-notifications-v1';
 function updateNotifications(section, clear = false) {
   const stored = load(notificationKey, {});
@@ -102,6 +208,8 @@ function saveTasks() {
   try {
     localStorage.setItem('kontur-tasks-v1', JSON.stringify(tasks));
     renderAnalytics();
+    renderTaskCalendar();
+    refreshCalendarSelection();
     return true;
   } catch {
     alert('Не удалось сохранить поручения в этом браузере.');
@@ -226,6 +334,177 @@ function meetingFor(council) {
   if (!meetings[council] || typeof meetings[council] !== 'object') meetings[council] = {};
   return meetings[council];
 }
+let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+const calendarCouncilClasses = { dnc: 'dnc', ntr: 'ntr', ssp: 'ssp' };
+const calendarStorageKey = 'ritm-calendar-meetings-v1';
+let calendarMeetings = load(calendarStorageKey, []);
+if (!Array.isArray(calendarMeetings)) calendarMeetings = [];
+let selectedCalendarDate = '';
+function openCalendarFiles() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('ritm-calendar-files', 1);
+    request.onupgradeneeded = () => request.result.createObjectStore('documents');
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+async function storeCalendarFiles(files) {
+  if (!files.length) return [];
+  const db = await openCalendarFiles();
+  try {
+    return await Promise.all(files.map(file => new Promise((resolve, reject) => {
+      const id = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+      const transaction = db.transaction('documents', 'readwrite');
+      transaction.objectStore('documents').put(file, id);
+      transaction.oncomplete = () => resolve({ id, name: file.name });
+      transaction.onerror = () => reject(transaction.error);
+    })));
+  } finally { db.close(); }
+}
+async function downloadCalendarFile(documentId, filename) {
+  try {
+    const db = await openCalendarFiles();
+    const file = await new Promise((resolve, reject) => {
+      const transaction = db.transaction('documents', 'readonly');
+      const request = transaction.objectStore('documents').get(documentId);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    db.close();
+    if (!file) throw new Error('Файл не найден');
+    const url = URL.createObjectURL(file);
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = filename; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch { document.getElementById('calendar-form-message').textContent = 'Не удалось открыть прикреплённый файл в этом браузере.'; }
+}
+function localDateKey(value) {
+  if (!value) return '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+  const date = new Date(`${value}T00:00:00`);
+  return !Number.isNaN(date.getTime()) && date.getFullYear() === Number(value.slice(0, 4)) && date.getMonth() + 1 === Number(value.slice(5, 7)) && date.getDate() === Number(value.slice(8, 10)) ? value : '';
+}
+function calendarEntries() {
+  const entries = calendarMeetings.filter(item => councils[item.council] && !item.deleted).map(item => {
+    if (item.id !== `protocol-${item.council}`) return item;
+    const protocol = meetingFor(item.council);
+    // Старые сохранённые правки не имели отдельного поля overrides.
+    const overrides = item.overrides || { date: item.date, time: item.time, place: item.place, comment: item.comment };
+    return { ...item, date: overrides.date ?? protocol.date ?? item.date, time: overrides.time ?? protocol.time ?? '', place: overrides.place ?? protocol.place ?? '', comment: overrides.comment ?? protocol.notes ?? '' };
+  }).filter(item => localDateKey(item.date));
+  Object.keys(councils).forEach(council => {
+    const legacy = meetingFor(council);
+    if (localDateKey(legacy.date) && !calendarMeetings.some(item => item.id === `protocol-${council}`) && !entries.some(item => item.council === council && item.date === legacy.date)) {
+      entries.push({ id: `protocol-${council}`, council, date: legacy.date, time: legacy.time || '', place: legacy.place || '', comment: legacy.notes || '', documents: [] });
+    }
+  });
+  return entries;
+}
+function tasksOnDate(dateKey) {
+  return tasks.filter(task => localDateKey(task.deadlineISO) === dateKey);
+}
+function taskCalendarStatus(task) {
+  if (task.status === 'done') return { className: 'task-done', label: 'Исполнено' };
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  return task.status === 'risk' || localDateKey(task.deadlineISO) && task.deadlineISO < today
+    ? { className: 'task-overdue', label: 'Просрочено' }
+    : { className: 'task-open', label: 'Не исполнено' };
+}
+function refreshCalendarSelection() {
+  renderMeetingsCalendar();
+  if (selectedCalendarDate) renderMeetingDetails(selectedCalendarDate);
+}
+function renderMeetingsCalendar() {
+  const calendar = document.getElementById('meetings-calendar');
+  const monthLabel = document.getElementById('calendar-month');
+  if (!calendar || !monthLabel) return;
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+  monthLabel.textContent = calendarMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+  calendar.replaceChildren();
+  ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => { const label = document.createElement('span'); label.className = 'calendar-weekday'; label.textContent = day; calendar.append(label); });
+  const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < firstDay; i++) calendar.append(document.createElement('span'));
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = localDateKey(`${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+    const cell = document.createElement('button');
+    cell.type = 'button'; cell.className = 'calendar-day'; cell.dataset.date = key;
+    const now = new Date();
+    if (key === localDateKey(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`)) cell.classList.add('today');
+    if (key === selectedCalendarDate) cell.classList.add('selected');
+    const number = document.createElement('strong'); number.textContent = day; cell.append(number);
+    Object.entries(councils).forEach(([council, name]) => {
+      if (!calendarEntries().some(meeting => meeting.council === council && meeting.date === key)) return;
+      cell.classList.add('has-meeting');
+      const marker = document.createElement('i'); marker.className = `calendar-marker ${calendarCouncilClasses[council]}`; marker.title = name; cell.append(marker);
+    });
+    cell.addEventListener('click', () => { selectedCalendarDate = key; document.getElementById('calendar-date').value = key; refreshCalendarSelection(); });
+    calendar.append(cell);
+  }
+}
+function renderMeetingDetails(dateKey) {
+  const details = document.getElementById('meeting-details');
+  details.replaceChildren();
+  const date = new Date(`${dateKey}T00:00:00`);
+  const heading = document.createElement('h3'); heading.textContent = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }); details.append(heading);
+  const meetingsForDate = calendarEntries().filter(item => item.date === dateKey);
+  if (!meetingsForDate.length) { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'На эту дату заседания не запланированы. Можно добавить заседание ниже.'; details.append(empty); return; }
+  meetingsForDate.forEach(meeting => {
+    const { council } = meeting;
+    const name = councils[council];
+    const proposalsForCouncil = proposals.filter(item => item.council === council && item.included);
+    const card = document.createElement('article'); card.className = `meeting-detail-card ${calendarCouncilClasses[council]}`;
+    const title = document.createElement('h4'); title.textContent = name;
+    const meta = document.createElement('p'); meta.textContent = `${meeting.time || 'Время не указано'} · ${meeting.place || 'Место не указано'}`;
+    const summary = document.createElement('p'); summary.textContent = `Повестка Совета: ${proposalsForCouncil.length}`;
+    const comment = document.createElement('p'); comment.textContent = meeting.comment || '';
+    const actions = document.createElement('div'); actions.className = 'meeting-detail-actions';
+    [['agenda', 'Открыть повестку'], ['protocols', 'Открыть протокол'], ['tasks', 'Открыть поручения']].forEach(([view, label]) => { const button = document.createElement('button'); button.type = 'button'; button.className = 'outline-button'; button.textContent = label; button.addEventListener('click', () => { if (view === 'agenda') { activeAgenda = council; renderAgenda(); } if (view === 'protocols') { activeProtocol = council; renderProtocol(); } if (view === 'tasks') { document.getElementById('task-filter-council').value = council; activeTaskTab = 'all'; document.querySelectorAll('[data-task-tab]').forEach(tab => tab.classList.toggle('active', tab.dataset.taskTab === 'all')); applyTaskFilters(); } showView(view); }); actions.append(button); });
+    const fileList = document.createElement('div'); fileList.className = 'calendar-documents';
+    (meeting.documents || []).forEach(file => { const button = document.createElement('button'); button.type = 'button'; button.className = 'text-button'; button.textContent = `📎 ${file.name}`; button.addEventListener('click', () => downloadCalendarFile(file.id, file.name)); fileList.append(button); });
+    const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'outline-button'; edit.textContent = 'Изменить'; edit.addEventListener('click', () => { document.getElementById('calendar-meeting-id').value = meeting.id; document.getElementById('calendar-council').value = council; document.getElementById('calendar-council').disabled = meeting.id === `protocol-${council}`; document.getElementById('calendar-date').value = meeting.date; document.getElementById('calendar-time').value = meeting.time || ''; document.getElementById('calendar-place').value = meeting.place || ''; document.getElementById('calendar-comment').value = meeting.comment || ''; document.getElementById('calendar-meeting-delete').hidden = false; document.getElementById('calendar-form-title').textContent = 'Изменить заседание'; document.getElementById('calendar-meeting-form').scrollIntoView({ behavior: 'smooth' }); }); actions.append(edit);
+    card.append(title, meta, summary, comment, fileList, actions); details.append(card);
+  });
+}
+document.getElementById('calendar-prev')?.addEventListener('click', () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1); renderMeetingsCalendar(); });
+document.getElementById('calendar-next')?.addEventListener('click', () => { calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1); renderMeetingsCalendar(); });
+document.getElementById('calendar-form-reset').addEventListener('click', () => { document.getElementById('calendar-meeting-form').reset(); document.getElementById('calendar-meeting-id').value = ''; document.getElementById('calendar-council').disabled = false; document.getElementById('calendar-meeting-delete').hidden = true; document.getElementById('calendar-form-title').textContent = 'Добавить заседание'; document.getElementById('calendar-form-message').textContent = ''; });
+document.getElementById('calendar-meeting-delete').addEventListener('click', () => { const id = document.getElementById('calendar-meeting-id').value; if (!id || !confirm('Удалить это заседание из календаря?')) return; calendarMeetings = calendarMeetings.map(item => item.id === id ? { ...item, deleted: true } : item); localStorage.setItem(calendarStorageKey, JSON.stringify(calendarMeetings)); document.getElementById('calendar-form-reset').click(); refreshCalendarSelection(); });
+document.getElementById('calendar-meeting-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  if (!form.reportValidity()) return;
+  const message = document.getElementById('calendar-form-message');
+  const date = localDateKey(document.getElementById('calendar-date').value);
+  if (!date) { message.textContent = 'Укажите корректную дату.'; return; }
+  const id = document.getElementById('calendar-meeting-id').value;
+  const previous = calendarMeetings.find(item => item.id === id);
+  const protocolEdit = Object.keys(councils).some(council => id === `protocol-${council}`);
+  const entry = { id: protocolEdit ? id : previous?.id || (globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`), council: document.getElementById('calendar-council').value, date, time: document.getElementById('calendar-time').value, place: document.getElementById('calendar-place').value.trim(), comment: document.getElementById('calendar-comment').value.trim(), documents: previous?.documents || [] };
+  if (protocolEdit) {
+    const protocol = meetingFor(entry.council);
+    entry.overrides = {};
+    for (const [field, source] of Object.entries({ date: 'date', time: 'time', place: 'place', comment: 'notes' })) {
+      if (entry[field] !== (protocol[source] || '')) entry.overrides[field] = entry[field];
+    }
+  }
+  const button = form.querySelector('[type="submit"]'); button.disabled = true; message.textContent = 'Сохранение…';
+  try {
+    const files = Array.from(document.getElementById('calendar-documents').files);
+    entry.documents = [...entry.documents, ...await storeCalendarFiles(files)];
+    const updated = previous ? calendarMeetings.map(item => item.id === id ? entry : item) : [...calendarMeetings, entry];
+    localStorage.setItem(calendarStorageKey, JSON.stringify(updated));
+    calendarMeetings = updated;
+    calendarMonth = new Date(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, 1);
+    selectedCalendarDate = date;
+    form.reset(); document.getElementById('calendar-meeting-id').value = ''; document.getElementById('calendar-council').disabled = false; document.getElementById('calendar-meeting-delete').hidden = true; document.getElementById('calendar-form-title').textContent = 'Добавить заседание';
+    refreshCalendarSelection(); message.textContent = 'Заседание сохранено.';
+  } catch { message.textContent = 'Не удалось сохранить заседание или документы. Проверьте доступность хранилища браузера.'; }
+  finally { button.disabled = false; }
+});
+window.addEventListener('storage', event => { if (event.key === calendarStorageKey) { const incoming = load(calendarStorageKey, []); calendarMeetings = Array.isArray(incoming) ? incoming : []; refreshCalendarSelection(); } });
+renderMeetingsCalendar();
 function includedProposals(council) {
   return proposals.filter(item => item.council === council && item.included);
 }
@@ -351,6 +630,7 @@ function renderProtocol() {
   document.getElementById(id).addEventListener('input', event => {
     meetingFor(activeProtocol)[field] = event.target.value;
     save();
+    if (['date', 'time', 'place', 'notes'].includes(field)) refreshCalendarSelection();
   });
 });
 document.getElementById('print-protocol').addEventListener('click', () => window.print());
@@ -725,6 +1005,8 @@ document.querySelector('#global-search')?.addEventListener('input', event => {
 
 let activeTaskTab = 'all';
 let openedTaskRow = null;
+let taskCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let selectedTaskCalendarDate = '';
 const taskDetailModal = document.getElementById('task-detail-modal');
 const councilNames = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
 const ministryCodes = {
@@ -738,6 +1020,46 @@ const taskStatusView = {
   risk: { label: 'Высокий риск', pill: 'red', priority: 'high', symbol: '!' },
   done: { label: 'Исполнено', pill: 'green', priority: 'low', symbol: '✓' }
 };
+function renderTaskCalendar() {
+  const calendar = document.getElementById('task-calendar');
+  const monthLabel = document.getElementById('task-calendar-month');
+  if (!calendar || !monthLabel) return;
+  const year = taskCalendarMonth.getFullYear();
+  const month = taskCalendarMonth.getMonth();
+  monthLabel.textContent = taskCalendarMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+  calendar.replaceChildren();
+  ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].forEach(day => { const label = document.createElement('span'); label.className = 'calendar-weekday'; label.textContent = day; calendar.append(label); });
+  const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < firstDay; i++) calendar.append(document.createElement('span'));
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const cell = document.createElement('button'); cell.type = 'button'; cell.className = 'calendar-day'; cell.dataset.date = key;
+    if (key === selectedTaskCalendarDate) cell.classList.add('selected');
+    const number = document.createElement('strong'); number.textContent = day; cell.append(number);
+    const dayTasks = tasksOnDate(key);
+    for (const status of ['task-open', 'task-overdue', 'task-done']) {
+      if (!dayTasks.some(task => taskCalendarStatus(task).className === status)) continue;
+      const marker = document.createElement('i'); marker.className = `calendar-marker ${status}`; marker.title = taskCalendarStatus(dayTasks.find(task => taskCalendarStatus(task).className === status)).label; cell.append(marker);
+    }
+    cell.addEventListener('click', () => { selectedTaskCalendarDate = key; renderTaskCalendar(); renderTaskCalendarDetails(key); });
+    calendar.append(cell);
+  }
+}
+function renderTaskCalendarDetails(dateKey) {
+  const details = document.getElementById('task-calendar-details');
+  if (!details) return;
+  details.replaceChildren();
+  const dayTasks = tasksOnDate(dateKey);
+  if (!dayTasks.length) { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'На эту дату поручения не запланированы.'; details.append(empty); return; }
+  const title = document.createElement('h3'); title.textContent = new Date(`${dateKey}T00:00:00`).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' }); details.append(title);
+  dayTasks.forEach(task => { const row = document.createElement('div'); row.className = `task-calendar-row ${taskCalendarStatus(task).className}`; const text = document.createElement('span'); text.textContent = `${task.title} · ${councilNames[task.council] || 'Совет не указан'} · ${taskCalendarStatus(task).label}${task.comment ? ` · ${task.comment}` : ''}`; const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'outline-button'; edit.textContent = 'Изменить'; edit.addEventListener('click', () => { document.getElementById('task-calendar-edit-id').value = task.id; document.getElementById('task-calendar-edit-date').value = task.deadlineISO || dateKey; document.getElementById('task-calendar-edit-status').value = task.status === 'done' ? 'done' : task.status === 'risk' ? 'risk' : 'work'; document.getElementById('task-calendar-edit-comment').value = task.comment || ''; document.getElementById('task-calendar-edit-delete').hidden = false; document.getElementById('task-calendar-edit').hidden = false; }); row.append(text, edit); details.append(row); });
+}
+document.getElementById('task-calendar-prev')?.addEventListener('click', () => { taskCalendarMonth = new Date(taskCalendarMonth.getFullYear(), taskCalendarMonth.getMonth() - 1, 1); renderTaskCalendar(); });
+document.getElementById('task-calendar-next')?.addEventListener('click', () => { taskCalendarMonth = new Date(taskCalendarMonth.getFullYear(), taskCalendarMonth.getMonth() + 1, 1); renderTaskCalendar(); });
+document.getElementById('task-calendar-edit-cancel')?.addEventListener('click', () => { document.getElementById('task-calendar-edit').hidden = true; });
+document.getElementById('task-calendar-edit-delete')?.addEventListener('click', () => { const id = document.getElementById('task-calendar-edit-id').value; if (!id || !confirm('Удалить это поручение?')) return; const index = tasks.findIndex(item => item.id === id); if (index < 0) return; tasks.splice(index, 1); if (!saveTasks()) return; document.getElementById('task-calendar-edit').hidden = true; renderTaskCalendar(); renderTaskCalendarDetails(selectedTaskCalendarDate); renderTaskRows(); refreshOverview(); updateTaskCounters(); applyTaskFilters(); });
+document.getElementById('task-calendar-edit')?.addEventListener('submit', event => { event.preventDefault(); const task = tasks.find(item => item.id === document.getElementById('task-calendar-edit-id').value); const date = localDateKey(document.getElementById('task-calendar-edit-date').value); if (!task || !date) return; task.deadlineISO = date; task.deadline = new Date(`${date}T00:00:00`).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }); task.status = document.getElementById('task-calendar-edit-status').value; task.comment = document.getElementById('task-calendar-edit-comment').value.trim(); if (!saveTasks()) return; document.getElementById('task-calendar-edit').hidden = true; document.getElementById('task-calendar-edit-delete').hidden = true; taskCalendarMonth = new Date(Number(date.slice(0, 4)), Number(date.slice(5, 7)) - 1, 1); selectedTaskCalendarDate = date; renderTaskCalendar(); renderTaskCalendarDetails(date); renderTaskRows(); refreshOverview(); updateTaskCounters(); applyTaskFilters(); });
 function taskRows() {
   return [...document.querySelectorAll('#full-task-list .task-record')];
 }
@@ -908,6 +1230,7 @@ document.getElementById('task-detail-comment').addEventListener('input', event =
   if (task) { task.comment = event.target.value; saveTasks(); }
 });
 renderTaskRows();
+renderTaskCalendar();
 updateTaskCounters();
 applyTaskFilters();
 refreshOverview();
@@ -932,6 +1255,7 @@ document.querySelector('#create-task').addEventListener('click', () => {
     council,
     owner: ownerValue === 'Выберите исполнителя' ? 'Не назначен' : ownerValue,
     deadline: deadlineValue ? new Date(`${deadlineValue}T00:00:00`).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' }) : 'Срок не задан',
+    deadlineISO: deadlineValue || '',
     status: 'work',
     comment: ''
   };

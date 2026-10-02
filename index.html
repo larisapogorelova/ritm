@@ -54,6 +54,9 @@
           <button class="nav-item active" data-view="overview">
             <span class="nav-icon">◈</span> Обзор <b id="overview-count">0</b>
           </button>
+          <button class="nav-item" data-view="councils">
+            <span class="nav-icon">◎</span> Информация о Советах
+          </button>
           <button class="nav-item" data-view="tasks">
             <span class="nav-icon">✓</span> Поручения <b id="tasks-count">0</b>
           </button>
@@ -209,6 +212,30 @@
               </div>
             </article>
           </div>
+          <section class="panel meetings-calendar-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">РАБОЧИЙ КАЛЕНДАРЬ</p><h2>Заседания Советов</h2><p>Заседания, документы и материалы Советов.</p></div>
+              <div class="calendar-controls"><button type="button" id="calendar-prev" aria-label="Предыдущий месяц">←</button><strong id="calendar-month"></strong><button type="button" id="calendar-next" aria-label="Следующий месяц">→</button></div>
+            </div>
+            <div class="council-legend"><span class="legend-dnc">Совет ДНЦ</span><span class="legend-ntr">Совет НТР</span><span class="legend-ssp">Совет ССП</span></div>
+            <div class="meetings-calendar" id="meetings-calendar"></div>
+            <div class="meeting-details" id="meeting-details"><p class="empty-state">Выберите дату с заседанием, чтобы открыть связанные документы.</p></div>
+            <form class="calendar-meeting-form" id="calendar-meeting-form">
+              <h3 id="calendar-form-title">Добавить заседание</h3>
+              <input type="hidden" id="calendar-meeting-id" />
+              <div class="calendar-form-grid">
+                <label>Совет<select id="calendar-council" required><option value="dnc">Совет ДНЦ</option><option value="ntr">Совет НТР</option><option value="ssp">Совет ССП</option></select></label>
+                <label>Дата<input type="date" id="calendar-date" required /></label>
+                <label>Время<input type="time" id="calendar-time" required /></label>
+                <label>Место проведения<input id="calendar-place" maxlength="160" required placeholder="Например, г. Луганск" /></label>
+              </div>
+              <label>Комментарий<textarea id="calendar-comment" rows="2" maxlength="2000" placeholder="Дополнительные сведения о заседании"></textarea></label>
+              <label>Прикрепить документы<input id="calendar-documents" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,.rtf,.odt,.ods,image/*" /></label>
+              <p class="form-hint">Документы сохраняются в этом браузере. Повестка и протокол берутся из разделов выбранного Совета.</p>
+              <div class="calendar-form-actions"><button type="submit" class="primary-button small">Сохранить заседание</button><button type="button" class="outline-button" id="calendar-form-reset">Очистить форму</button><button type="button" class="outline-button danger-button" id="calendar-meeting-delete" hidden>Удалить заседание</button></div>
+              <p class="form-hint" id="calendar-form-message" role="status"></p>
+            </form>
+          </section>
           <div class="content-grid">
             <section class="panel task-panel">
               <div class="panel-head">
@@ -331,6 +358,29 @@
           </p>
         </section>
 
+        <section class="page-view" id="councils-view">
+          <div class="page-heading"><div><p class="eyebrow">ОРГАНИЗАЦИОННАЯ ИНФОРМАЦИЯ</p><h1>Информация о Советах</h1><p class="lede">Сведения о составе, задачах и работе Советов. Информацию можно редактировать вручную.</p></div></div>
+          <div class="council-info-tabs" id="council-info-tabs" role="tablist" aria-label="Советы"></div>
+          <form class="panel council-info-form" id="council-info-form">
+            <div class="panel-head"><div><p class="eyebrow" id="council-info-eyebrow">СОВЕТ</p><h2 id="council-info-title"></h2></div><span class="form-hint">Изменения сохраняются автоматически</span></div>
+            <div class="council-info-grid"><label>Наименование Совета<input id="council-info-name" maxlength="240" required /></label><label>Председатель<input id="council-info-chair" maxlength="240" /></label><label>Секретарь<input id="council-info-secretary" maxlength="240" /></label><label>Периодичность заседаний<input id="council-info-schedule" maxlength="240" placeholder="Например, ежемесячно" /></label></div>
+            <label>Цели Совета<textarea id="council-info-goal" rows="5" maxlength="5000"></textarea></label>
+            <label>Основные задачи Совета<textarea id="council-info-tasks" rows="6" maxlength="6000"></textarea></label>
+            <label>Функции Совета<textarea id="council-info-functions" rows="7" maxlength="7000"></textarea></label>
+            <label id="council-info-powers-field">Полномочия Совета<textarea id="council-info-powers" rows="6" maxlength="6000"></textarea></label>
+            <label>Состав и организация Совета<textarea id="council-info-organization" rows="8" maxlength="8000"></textarea></label>
+            <label>Комиссии при Совете<textarea id="council-info-commissions" rows="7" maxlength="7000"></textarea></label>
+            <label>Комиссия 1<textarea id="council-info-commission-1" rows="6" maxlength="7000"></textarea></label>
+            <label>Комиссия 2<textarea id="council-info-commission-2" rows="6" maxlength="7000"></textarea></label>
+            <label>Комиссия 3<textarea id="council-info-commission-3" rows="6" maxlength="7000"></textarea></label>
+            <label>Комиссия 4<textarea id="council-info-commission-4" rows="6" maxlength="7000"></textarea></label>
+            <label>Состав Совета<textarea id="council-info-composition" rows="7" maxlength="7000"></textarea></label>
+            <label id="council-info-commission-rules-field">Типовое положение о комиссиях<textarea id="council-info-commission-rules" rows="8" maxlength="8000"></textarea></label>
+            <label>Организационно-техническое сопровождение<textarea id="council-info-support" rows="3" maxlength="2000"></textarea></label>
+            <label>Дополнительная информация<textarea id="council-info-notes" rows="5" maxlength="4000" placeholder="Контакты, порядок работы, ссылки и другие сведения"></textarea></label>
+            <div class="calendar-form-actions"><button type="submit" class="primary-button small">Сохранить информацию</button><button type="button" class="outline-button" id="council-info-reset">Восстановить исходные данные</button></div><p class="form-hint" id="council-info-message" role="status"></p>
+          </form>
+        </section>
         <section class="page-view" id="tasks-view">
           <div class="page-heading">
             <div>
@@ -404,6 +454,13 @@
               Поручения не загружены. Создайте или загрузите конкретное поручение.
             </div>
           </div>
+          <section class="panel task-calendar-panel">
+            <div class="panel-head"><div><p class="eyebrow">СРОКИ ПОРУЧЕНИЙ</p><h2>Календарь поручений</h2><p>Данные автоматически загружаются из списка поручений. Дату и статус можно изменить вручную.</p></div><div class="calendar-controls"><button type="button" id="task-calendar-prev" aria-label="Предыдущий месяц">←</button><strong id="task-calendar-month"></strong><button type="button" id="task-calendar-next" aria-label="Следующий месяц">→</button></div></div>
+            <div class="council-legend task-calendar-legend"><span class="legend-task-open">Не исполнено</span><span class="legend-task-overdue">Просрочено</span><span class="legend-task-done">Исполнено</span></div>
+            <div class="meetings-calendar" id="task-calendar"></div>
+            <div class="task-calendar-details" id="task-calendar-details"><p class="empty-state">Выберите дату, чтобы открыть поручения.</p></div>
+            <form class="task-calendar-edit" id="task-calendar-edit" hidden><input type="hidden" id="task-calendar-edit-id" /><label>Срок<input type="date" id="task-calendar-edit-date" required /></label><label>Статус<select id="task-calendar-edit-status"><option value="work">Не исполнено</option><option value="risk">Просрочено</option><option value="done">Исполнено</option></select></label><label class="task-calendar-comment-label">Комментарий<textarea id="task-calendar-edit-comment" rows="2" maxlength="2000" placeholder="Комментарий к поручению"></textarea></label><button type="submit" class="primary-button small">Сохранить изменения</button><button type="button" class="outline-button" id="task-calendar-edit-cancel">Отмена</button><button type="button" class="outline-button danger-button" id="task-calendar-edit-delete" hidden>Удалить поручение</button><p class="form-hint" id="task-calendar-edit-message" role="status"></p></form>
+          </section>
         </section>
         <section class="page-view" id="agenda-view">
           <div class="page-heading">
@@ -975,7 +1032,7 @@
               <option>Министерство образования и науки ЛНР</option>
             </select></label
           ><label
-            >Срок<input id="task-deadline" type="date" value="2026-09-30"
+            >Срок<input id="task-deadline" type="date"
           /></label>
         </div>
         <label
