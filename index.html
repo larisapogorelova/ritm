@@ -57,6 +57,9 @@
           <button class="nav-item" data-view="councils">
             <span class="nav-icon">◎</span> Информация о Советах
           </button>
+          <button class="nav-item" data-view="decisions">
+            <span class="nav-icon">↳</span> Проект решений
+          </button>
           <button class="nav-item" data-view="tasks">
             <span class="nav-icon">✓</span> Поручения <b id="tasks-count">0</b>
           </button>
@@ -381,6 +384,17 @@
             <div class="calendar-form-actions"><button type="submit" class="primary-button small">Сохранить информацию</button><button type="button" class="outline-button" id="council-info-reset">Восстановить исходные данные</button></div><p class="form-hint" id="council-info-message" role="status"></p>
           </form>
         </section>
+        <section class="page-view" id="decisions-view">
+          <div class="page-heading"><div><p class="eyebrow">РАБОЧИЙ ДОКУМЕНТ</p><h1>Проект решений</h1><p class="lede">Подготовьте ответственного, срок и поручения отдельно для каждого Совета. Данные сохраняются в браузере и автоматически отображаются в его сводном протоколе.</p></div></div>
+          <div class="council-info-tabs" id="decision-tabs" role="tablist" aria-label="Советы для проекта решений"></div>
+          <form class="panel decision-form" id="decision-form">
+            <div class="panel-head"><div><p class="eyebrow" id="decision-eyebrow">СОВЕТ</p><h2 id="decision-title"></h2></div><span class="form-hint">Изменения сохраняются автоматически</span></div>
+            <label>Ответственный<textarea id="decision-responsible" rows="3" maxlength="2000" placeholder="ФИО, должность, подразделение или орган"></textarea></label>
+            <label>Сроки<textarea id="decision-deadlines" rows="3" maxlength="2000" placeholder="Дата, период или этап исполнения"></textarea></label>
+            <label>Поручения<textarea id="decision-assignments" rows="8" maxlength="8000" placeholder="Опишите поручения проекта решения"></textarea></label>
+            <div class="calendar-form-actions"><button type="submit" class="primary-button small">Сохранить проект</button><button type="button" class="outline-button" id="decision-reset">Очистить поля</button></div><p class="form-hint" id="decision-message" role="status"></p>
+          </form>
+        </section>
         <section class="page-view" id="tasks-view">
           <div class="page-heading">
             <div>
@@ -686,6 +700,10 @@
             </div>
             <h3>Вопросы повестки и резолюции</h3>
             <div id="protocol-items" class="protocol-items"></div>
+            <section class="project-decision-protocol" id="protocol-project-decisions" hidden>
+              <h3>Проект решений</h3>
+              <div id="protocol-project-decision-content"></div>
+            </section>
             <section class="audio-protocol-card" aria-labelledby="audio-protocol-title">
               <div class="panel-head">
                 <div>

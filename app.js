@@ -23,7 +23,7 @@ document.querySelectorAll('[data-ministry-councils]').forEach(button => button.a
   }
 }));
 const pageLabel = document.querySelector('#page-label');
-const labels = { overview: 'Обзор', councils: 'Информация о Советах', tasks: 'Поручения', agenda: 'Повестка', protocols: 'Сводные протоколы', media: 'Медиа-мастерская', analytics: 'Аналитика' };
+const labels = { overview: 'Обзор', councils: 'Информация о Советах', decisions: 'Проект решений', tasks: 'Поручения', agenda: 'Повестка', protocols: 'Сводные протоколы', media: 'Медиа-мастерская', analytics: 'Аналитика' };
 const councils = { ntr: 'Совет по НТР', ssp: 'Совет по ССП', dnc: 'Совет по ДНЦ' };
 const councilDescriptions = {
   ntr: 'Вопросы научно-технологического развития, инноваций и внедрения решений.',
@@ -43,6 +43,49 @@ const councilOfficers = {
 document.querySelector('.activity-panel .panel-head h2').textContent = 'Лента решений';
 let activeAgenda = 'ntr';
 let activeProtocol = 'ntr';
+let activeDecisionCouncil = 'ntr';
+const projectDecisionsKey = 'ritm-project-decisions-v1';
+const projectDecisions = Object.fromEntries(Object.keys(councils).map(council => [council, { responsible: '', deadlines: '', assignments: '', ...(load(projectDecisionsKey, {})[council] || {}) }]));
+function saveProjectDecisions() {
+  try { localStorage.setItem(projectDecisionsKey, JSON.stringify(projectDecisions)); return true; } catch { return false; }
+}
+function renderProjectDecisions() {
+  const tabs = document.getElementById('decision-tabs');
+  if (!tabs) return;
+  tabs.replaceChildren();
+  Object.keys(councils).forEach(council => {
+    const tab = document.createElement('button');
+    tab.type = 'button'; tab.className = `council-info-tab ${council === activeDecisionCouncil ? 'active' : ''}`; tab.textContent = councils[council]; tab.setAttribute('aria-selected', String(council === activeDecisionCouncil));
+    tab.addEventListener('click', () => { activeDecisionCouncil = council; renderProjectDecisions(); });
+    tabs.append(tab);
+  });
+  const decision = projectDecisions[activeDecisionCouncil];
+  document.getElementById('decision-eyebrow').textContent = `СОВЕТ ${activeDecisionCouncil.toUpperCase()}`;
+  document.getElementById('decision-title').textContent = councils[activeDecisionCouncil];
+  document.getElementById('decision-responsible').value = decision.responsible;
+  document.getElementById('decision-deadlines').value = decision.deadlines;
+  document.getElementById('decision-assignments').value = decision.assignments;
+}
+function renderProtocolProjectDecision() {
+  const section = document.getElementById('protocol-project-decisions');
+  const content = document.getElementById('protocol-project-decision-content');
+  if (!section || !content) return;
+  const decision = projectDecisions[activeProtocol];
+  content.replaceChildren();
+  const fields = [['Ответственный', decision.responsible], ['Сроки', decision.deadlines], ['Поручения', decision.assignments]];
+  const hasContent = fields.some(([, value]) => value.trim());
+  section.hidden = !hasContent;
+  if (!hasContent) return;
+  fields.forEach(([label, value]) => { if (!value.trim()) return; const block = document.createElement('div'); block.className = 'project-decision-field'; const heading = document.createElement('strong'); heading.textContent = label; const text = document.createElement('p'); text.textContent = value; block.append(heading, text); content.append(block); });
+}
+document.getElementById('decision-form')?.addEventListener('submit', event => {
+  event.preventDefault();
+  Object.assign(projectDecisions[activeDecisionCouncil], { responsible: document.getElementById('decision-responsible').value.trim(), deadlines: document.getElementById('decision-deadlines').value.trim(), assignments: document.getElementById('decision-assignments').value.trim() });
+  const message = document.getElementById('decision-message');
+  if (saveProjectDecisions()) { renderProjectDecisions(); renderProtocolProjectDecision(); message.textContent = 'Проект решения сохранён и добавлен в сводный протокол.'; } else message.textContent = 'Не удалось сохранить проект решения в этом браузере.';
+});
+document.getElementById('decision-reset')?.addEventListener('click', () => { projectDecisions[activeDecisionCouncil] = { responsible: '', deadlines: '', assignments: '' }; saveProjectDecisions(); renderProjectDecisions(); renderProtocolProjectDecision(); document.getElementById('decision-message').textContent = 'Поля проекта решения очищены.'; });
+renderProjectDecisions();
 
 function showView(view) {
   if (!labels[view]) return;
@@ -165,6 +208,8 @@ function renderCouncilInfo() {
     const wrapper = field?.closest('label');
     if (wrapper) wrapper.hidden = !field.value.trim();
   });
+  document.getElementById('council-info-powers-field').hidden = activeCouncilInfo === 'dnc' || !info.powers?.trim();
+  document.getElementById('council-info-commission-rules-field').hidden = activeCouncilInfo === 'ssp' || !info.commissionRules?.trim();
 }
 document.getElementById('council-info-form')?.addEventListener('submit', event => { event.preventDefault(); const info = councilInfo[activeCouncilInfo]; Object.assign(info, { name: document.getElementById('council-info-name').value.trim(), chair: document.getElementById('council-info-chair').value.trim(), secretary: document.getElementById('council-info-secretary').value.trim(), schedule: document.getElementById('council-info-schedule').value.trim(), goal: document.getElementById('council-info-goal').value.trim(), tasks: document.getElementById('council-info-tasks').value.trim(), functions: document.getElementById('council-info-functions').value.trim(), powers: document.getElementById('council-info-powers').value.trim(), organization: document.getElementById('council-info-organization').value.trim(), commissions: document.getElementById('council-info-commissions').value.trim(), commissionRules: document.getElementById('council-info-commission-rules').value.trim(), commission1: document.getElementById('council-info-commission-1').value.trim(), commission2: document.getElementById('council-info-commission-2').value.trim(), commission3: document.getElementById('council-info-commission-3').value.trim(), commission4: document.getElementById('council-info-commission-4').value.trim(), composition: document.getElementById('council-info-composition').value.trim(), support: document.getElementById('council-info-support').value.trim(), notes: document.getElementById('council-info-notes').value.trim() }); if (saveCouncilInfo()) { renderCouncilInfo(); document.getElementById('council-info-message').textContent = 'Информация сохранена.'; } else document.getElementById('council-info-message').textContent = 'Не удалось сохранить информацию в этом браузере.'; });
 document.getElementById('council-info-reset')?.addEventListener('click', () => { councilInfo[activeCouncilInfo] = { ...defaultCouncilInfo[activeCouncilInfo] }; saveCouncilInfo(); renderCouncilInfo(); document.getElementById('council-info-message').textContent = 'Исходные данные восстановлены.'; });
@@ -567,6 +612,7 @@ function renderProtocol() {
   document.getElementById('protocol-count').textContent = itemCountLabel(items.length);
   const container = document.getElementById('protocol-items');
   container.replaceChildren();
+  renderProtocolProjectDecision();
   if (!items.length) {
     const empty = document.createElement('p');
     empty.className = 'empty-state';
@@ -719,7 +765,13 @@ function protocolDocumentHtml(council) {
     const responsible = typeof meeting.responsibles?.[item.id] === 'string' ? meeting.responsibles[item.id] : item.responsible;
     return `<section class="resolution"><h3>${index + 1}. Вопрос повестки: ${escapeDocumentText(item.title)}</h3><p><b>Докладчик:</b> ${escapeDocumentText(item.presenter || item.author)}</p><p><b>Предложение в резолюцию протокола:</b><br>${escapeDocumentText(decision || 'Не указано')}</p><p><b>Срок реализации:</b> ${escapeDocumentText(deadline || 'Не указан')}</p><p><b>Ответственные за реализацию:</b><br>${escapeDocumentText(responsible || 'Не указаны')}</p><p class="muted">Инициатор: ${escapeDocumentText(item.ministry)}, ${escapeDocumentText(item.author)}</p></section>`;
   }).join('');
-  return `<p style="text-align:center">${escapeDocumentText('Наименование органа государственной власти субъекта Российской Федерации')}<br>${escapeDocumentText(councils[council])}</p><h1>Протокол заседания<br>${escapeDocumentText(councils[council])}</h1><table class="meta"><tr><td>Дата: ${escapeDocumentText(formatDocumentDate(meeting.date))}</td><td>№ ${escapeDocumentText(meeting.number || '___')}</td></tr><tr><td>Место: ${escapeDocumentText(meeting.place || '________________')}</td><td>Время: ${escapeDocumentText(meeting.time || '________________')}</td></tr></table><p><b>Основание проведения:</b> ________________________________________________</p><p><b>Председательствующий:</b> ${escapeDocumentText(meeting.chair || councilOfficers[council].chair)}</p><p><b>Секретарь:</b> ${escapeDocumentText(meeting.secretary || councilOfficers[council].secretary)}</p><p><b>Присутствовали:</b> ______________________________________________________</p><p><b>Приглашённые:</b> _________________________________________________________</p><h2>Повестка дня</h2>${agenda || '<p>Предложения не поступили.</p>'}<h2>Рассмотрение вопросов и решения</h2>${resolutions || '<p>Проекты решений не поступили.</p>'}${meeting.notes ? `<h2>Дополнительные замечания</h2><p>${escapeDocumentText(meeting.notes)}</p>` : ''}<table class="meta" style="margin-top:36pt"><tr><td>Председательствующий<br><br>________________ / __________________</td><td>Секретарь<br><br>________________ / __________________</td></tr></table>`;
+  const project = projectDecisions[council];
+  const projectHtml = [
+    ['Ответственный', project.responsible],
+    ['Сроки', project.deadlines],
+    ['Поручения', project.assignments]
+  ].filter(([, value]) => value.trim()).map(([label, value]) => `<p><b>${label}:</b><br>${escapeDocumentText(value)}</p>`).join('');
+  return `<p style="text-align:center">${escapeDocumentText('Наименование органа государственной власти субъекта Российской Федерации')}<br>${escapeDocumentText(councils[council])}</p><h1>Протокол заседания<br>${escapeDocumentText(councils[council])}</h1><table class="meta"><tr><td>Дата: ${escapeDocumentText(formatDocumentDate(meeting.date))}</td><td>№ ${escapeDocumentText(meeting.number || '___')}</td></tr><tr><td>Место: ${escapeDocumentText(meeting.place || '________________')}</td><td>Время: ${escapeDocumentText(meeting.time || '________________')}</td></tr></table><p><b>Основание проведения:</b> ________________________________________________</p><p><b>Председательствующий:</b> ${escapeDocumentText(meeting.chair || councilOfficers[council].chair)}</p><p><b>Секретарь:</b> ${escapeDocumentText(meeting.secretary || councilOfficers[council].secretary)}</p><p><b>Присутствовали:</b> ______________________________________________________</p><p><b>Приглашённые:</b> _________________________________________________________</p><h2>Повестка дня</h2>${agenda || '<p>Предложения не поступили.</p>'}<h2>Проект решений</h2>${projectHtml || '<p>Проект решения не заполнен.</p>'}<h2>Рассмотрение вопросов и решения</h2>${resolutions || '<p>Проекты решений не поступили.</p>'}${meeting.notes ? `<h2>Дополнительные замечания</h2><p>${escapeDocumentText(meeting.notes)}</p>` : ''}<table class="meta" style="margin-top:36pt"><tr><td>Председательствующий<br><br>________________ / __________________</td><td>Секретарь<br><br>________________ / __________________</td></tr></table>`;
 }
 document.getElementById('download-agenda').addEventListener('click', () => {
   const agendaDocument = councilAgendaDocuments[activeAgenda];
