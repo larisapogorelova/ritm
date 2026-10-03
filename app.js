@@ -49,6 +49,11 @@ const projectDecisions = Object.fromEntries(Object.keys(councils).map(council =>
 function saveProjectDecisions() {
   try { localStorage.setItem(projectDecisionsKey, JSON.stringify(projectDecisions)); return true; } catch { return false; }
 }
+function updateProjectDecisionCount() {
+  document.getElementById('decisions-count').textContent = Object.values(projectDecisions).filter(decision =>
+    ['responsible', 'deadlines', 'assignments'].some(field => String(decision[field] || '').trim())
+  ).length;
+}
 function renderProjectDecisions() {
   const tabs = document.getElementById('decision-tabs');
   if (!tabs) return;
@@ -65,6 +70,7 @@ function renderProjectDecisions() {
   document.getElementById('decision-responsible').value = decision.responsible;
   document.getElementById('decision-deadlines').value = decision.deadlines;
   document.getElementById('decision-assignments').value = decision.assignments;
+  updateProjectDecisionCount();
 }
 function renderProtocolProjectDecision() {
   const section = document.getElementById('protocol-project-decisions');
@@ -226,7 +232,6 @@ function updateNotifications(section, clear = false) {
     counts[section] = clear || visible ? 0 : counts[section] + 1;
     try { localStorage.setItem(notificationKey, JSON.stringify(counts)); } catch { /* Counters remain available for this update. */ }
   }
-  document.getElementById('protocol-notifications').textContent = counts.protocols;
   document.getElementById('media-notifications').textContent = counts.media;
 }
 updateNotifications();
@@ -1177,7 +1182,6 @@ function refreshOverview() {
   const risk = tasks.filter(task => task.status === 'risk').length;
   const done = tasks.filter(task => task.status === 'done').length;
   const work = tasks.filter(task => task.status !== 'done').length;
-  document.getElementById('overview-count').textContent = total;
   document.getElementById('tasks-count').textContent = total;
   document.getElementById('overview-in-work').textContent = work;
   document.getElementById('overview-risk').textContent = risk;
