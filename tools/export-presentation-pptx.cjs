@@ -8,7 +8,6 @@ const root = path.resolve(__dirname, '..');
 const output = path.join(root, 'Презентация платформы РИТМ.pptx');
 const previewDir = path.join(root, '.pptx-frames');
 const edge = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
-const frameTimes = [0, 350, 750, 1200, 1800];
 
 async function main() {
   fs.mkdirSync(previewDir, { recursive: true });
@@ -28,25 +27,22 @@ async function main() {
   });
 
   const presentationUrl = pathToFileURL(path.join(root, 'presentation.html')).href;
-  let frameNumber = 0;
-  for (let slideNumber = 1; slideNumber <= 8; slideNumber += 1) {
+  const slideCount = await page.goto(presentationUrl, { waitUntil: 'load' }).then(() => page.locator('.slide').count());
+  for (let slideNumber = 1; slideNumber <= slideCount; slideNumber += 1) {
     await page.goto(`${presentationUrl}?slide=${slideNumber}`, { waitUntil: 'load' });
     const slide = page.locator('.slide.active');
     await slide.waitFor({ state: 'visible' });
-    for (const time of frameTimes) {
-      await page.waitForTimeout(time === 0 ? 40 : time - (frameTimes[frameTimes.indexOf(time) - 1] || 0));
-      const file = path.join(previewDir, `slide-${String(slideNumber).padStart(2, '0')}-frame-${String(frameTimes.indexOf(time) + 1).padStart(2, '0')}.png`);
-      await slide.screenshot({ path: file });
-      const pptSlide = pptx.addSlide('FRAME');
-      pptSlide.addImage({ path: file, x: 0, y: 0, w: 13.333, h: 7.5 });
-      pptSlide.addNotes(`Слайд ${slideNumber}/8, кадр анимации ${frameTimes.indexOf(time) + 1}/5. Перелистывание имитирует появление элементов.`);
-      frameNumber += 1;
-    }
+    await page.waitForTimeout(1800);
+    const file = path.join(previewDir, `slide-${String(slideNumber).padStart(2, '0')}.png`);
+    await slide.screenshot({ path: file });
+    const pptSlide = pptx.addSlide('FRAME');
+    pptSlide.addImage({ path: file, x: 0, y: 0, w: 13.333, h: 7.5 });
+    pptSlide.addNotes(`Слайд ${slideNumber}/${slideCount}.`);
   }
   await browser.close();
   await pptx.writeFile({ fileName: output });
   fs.rmSync(previewDir, { recursive: true, force: true });
-  console.log(`Created ${output} with ${frameNumber} animation frames.`);
+  console.log(`Created ${output} with ${slideCount} slides.`);
 }
 
 main().catch(error => {

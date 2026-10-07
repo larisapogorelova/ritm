@@ -60,130 +60,66 @@
     @media(max-width:760px){.deck{padding:8px}.slide{width:96vw;aspect-ratio:auto;height:86vh;padding:34px 25px;overflow:auto}.slide-number{right:24px;top:20px}.deck h1{font-size:40px;letter-spacing:-2px}.deck h2{font-size:29px}.title-slide h1{font-size:64px}.title-visual{right:-68px;top:15px;transform:scale(.62);transform-origin:top right;opacity:.62}.goals-grid{grid-template-columns:1fr}.interface-head{display:block}.interface-stage{height:330px}.hero-layout{display:block}.hero-screen{height:260px;margin-top:24px}.problem-grid,.module-gallery,.kpis,.roadmap,.roadmap-screens{grid-template-columns:1fr}.problem-card,.module-shot,.roadmap-screen{min-height:170px;height:170px}.task-stage{height:360px}.annotation{display:none}.closing-slide h2{font-size:42px}.closing-quotes{grid-template-columns:1fr;width:100%}.closing-quotes blockquote{font-size:14px;padding:17px}.slide-footer{display:none}.progress{display:none}}
     @page{size:13.333in 7.5in;margin:0}@media print{*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;animation:none!important;transition:none!important}body{background:#25262a;overflow:visible}.deck{display:block;height:auto;padding:0}.slide,.slide.active{display:block!important;width:13.333in;height:7.5in;aspect-ratio:auto;padding:48px 58px!important;overflow:hidden!important;border-radius:0;box-shadow:none;break-after:page;page-break-after:always}.title-slide,.title-slide.active{display:grid!important}.slide:last-child{break-after:auto;page-break-after:auto}.deck h1{font-size:67px;letter-spacing:-3px}.deck h2{font-size:38px}.title-slide h1{font-size:92px}.goals-grid,.problem-grid,.roadmap,.roadmap-screens{grid-template-columns:repeat(3,1fr)!important}.module-gallery,.kpis{grid-template-columns:repeat(4,1fr)!important}.goal-card{min-height:116px}.problem-card{min-height:205px;height:auto}.module-shot{height:335px;min-height:0}.roadmap-screen{height:215px;min-height:0}.interface-head{display:flex}.interface-stage{height:490px}.task-stage{height:465px}.slide-footer{display:block!important}.deck-controls,.progress{display:none!important}}
     @media print{.title-visual{right:90px;top:48px;transform:scale(.84);transform-origin:top right}.closing-slide,.closing-slide.active{display:grid!important}.closing-slide h2{font-size:66px}}
+    .pitch-slide h2{font-size:39px;margin:12px 0 25px}.pitch-slide .eyebrow{margin:0}.pitch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.pitch-card{background:#252942;border:1px solid #353a57;border-radius:12px;padding:22px 25px}.pitch-card b{display:block;color:var(--cyan);font:11px 'DM Mono';margin-bottom:14px}.pitch-card strong{display:block;font-size:20px;line-height:1.3}.pitch-card p{font-size:15px;margin:10px 0 0}.pitch-note{margin-top:20px!important;font-size:14px!important}.pitch-title{font-size:84px!important;margin:22px 0 0!important}.pitch-author{font-size:21px!important;color:#e4e0ff!important;margin:4px 0 28px!important}.pitch-solution{display:grid;grid-template-columns: .9fr 1.1fr;gap:24px;align-items:start}.pitch-route{display:grid;gap:13px}.pitch-route .pitch-card{padding:17px 20px}.pitch-route .pitch-card strong{font-size:17px}.pitch-route .pitch-card p{font-size:13px}.pitch-screen{height:395px;margin:0}.pitch-screen img{object-fit:cover;object-position:top left}.pitch-screen figcaption{position:absolute;bottom:9px;right:10px;background:#111528e8;padding:7px 10px;border-radius:6px;font-size:10px}.pitch-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.pitch-steps .pitch-card{min-height:265px}.pitch-steps .pitch-card strong{font-size:18px}.pitch-steps .pitch-card p{font-size:13px}.pitch-steps .pitch-card b{margin-bottom:18px}.pitch-highlight{border-left:3px solid var(--cyan);background:#252942;border-radius:7px;padding:17px 20px;margin-top:19px!important;font-size:15px!important}.pitch-metric{display:flex;align-items:center;gap:24px;margin:20px 0 23px}.pitch-metric strong{font-size:68px;color:var(--cyan);letter-spacing:-3px}.pitch-metric span{font-size:20px;color:var(--muted)}.pitch-metric small{font-size:13px;display:block;color:var(--muted)}.pitch-metric .arrow{font-size:34px;color:var(--violet)}
+    @media(max-width:760px){.pitch-slide h2{font-size:28px}.pitch-title{font-size:60px!important}.pitch-author{font-size:17px!important}.pitch-grid,.pitch-solution,.pitch-steps{grid-template-columns:1fr}.pitch-card{padding:15px}.pitch-card strong{font-size:17px}.pitch-card p{font-size:13px}.pitch-steps .pitch-card{min-height:0}.pitch-screen{height:240px}.pitch-metric strong{font-size:43px}.pitch-metric{gap:10px}.pitch-metric span{font-size:13px}}
+    .pitch-route{gap:9px}.pitch-route .pitch-card{padding:12px 18px}.pitch-route .pitch-card b{margin-bottom:9px}.pitch-route .pitch-card p{margin-top:6px}
+    @media print{.pitch-title{font-size:84px!important}.pitch-slide h2{font-size:39px}.pitch-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pitch-solution{grid-template-columns:.9fr 1.1fr}.pitch-steps{grid-template-columns:repeat(3,minmax(0,1fr))}.pitch-screen{height:395px}}
   </style>
 </head>
 <body>
   <main class="deck">
-    <section class="slide title-slide active">
-      <span class="slide-number">01 / 08</span>
-       <div class="title-kicker"><div class="mark">Р</div><span>ЕДИНАЯ ПЛАТФОРМА УПРАВЛЕНИЯ</span></div>
-       <h1>РИТМ</h1>
-       <p class="title-subtitle">Решения · Исполнение · Трекинг · Медиа</p>
-       <div class="title-visual" aria-hidden="true">
-         <span class="orbit"></span><span class="orbit orbit-two"></span>
-         <div class="rhythm-core">Р</div>
-         <div class="signal-bars"><i style="--bar:12px;--i:1"></i><i style="--bar:25px;--i:2"></i><i style="--bar:17px;--i:3"></i><i style="--bar:32px;--i:4"></i><i style="--bar:21px;--i:5"></i><i style="--bar:29px;--i:6"></i><i style="--bar:14px;--i:7"></i><i style="--bar:24px;--i:8"></i><i style="--bar:10px;--i:9"></i></div>
-         <span class="signal-label">РЕШЕНИЕ → ДЕЙСТВИЕ</span>
-       </div>
-      <div class="goals-label">ОСНОВНЫЕ ЦЕЛИ ПРОЕКТА</div>
-      <div class="goals-grid">
-        <div class="goal-card"><b>01</b><strong>Объединить весь цикл решения в одной системе</strong></div>
-        <div class="goal-card"><b>02</b><strong>Сделать исполнение поручений прозрачным</strong></div>
-        <div class="goal-card"><b>03</b><strong>Быстро сообщать жителям о результатах</strong></div>
+    <section class="slide pitch-slide active">
+      <span class="slide-number">01 / 04</span>
+      <p class="eyebrow">ПРОЕКТ · ПРОБЛЕМА</p>
+      <h1 class="pitch-title">РИТМ</h1>
+      <p class="pitch-author">Погорелова Лариса Яковлевна</p>
+      <div class="pitch-grid">
+        <div class="pitch-card"><b>ДЛЯ КОГО</b><strong>Специалисты ОКМВ и секретари Советов НТР, ССП, ДНЦ</strong><p>Собирают вопросы, проекты решений и протоколы; затем следят за исполнением поручений.</p></div>
+        <div class="pitch-card"><b>ИХ ТРУДНОСТЬ</b><strong>Контекст решения приходится восстанавливать вручную</strong><p>Поручения живут в СЭДе или чатах, а сроки и исполнителей нужно сверять с протоколом.</p></div>
       </div>
-      <span class="slide-footer">Проектная версия · 2026</span>
+      <p class="pitch-note">Выводы анализа рабочего процесса: данные о вопросе и решении разнесены по этапам; ручная сверка статусов замедляет контроль. Количественные оценки уточним на пилоте.</p>
+      <span class="slide-footer">Основание: анализ маршрута и документов проекта РИТМ; отдельный опрос не заявлен</span>
     </section>
 
-    <section class="slide">
-      <span class="slide-number">02 / 08</span>
-      <div class="interface-head">
-         <div><p class="eyebrow">ИНТЕРФЕЙС ПЛАТФОРМЫ</p><h2>Все разделы <span class="accent">в едином ритме</span></h2></div>
-         <p>В меню — обзор, информация о Советах, проект решений, сводные протоколы, поручения, повестка, медиа-мастерская и аналитика. Календарь заседаний доступен на обзоре.</p>
+    <section class="slide pitch-slide">
+      <span class="slide-number">02 / 04</span>
+      <p class="eyebrow">РЕШЕНИЕ · МАРШРУТ ПОЛЬЗОВАТЕЛЯ</p>
+      <h2>От вопроса <span class="accent">до контроля</span> в одном месте</h2>
+      <div class="pitch-solution">
+        <div class="pitch-route">
+          <div class="pitch-card"><b>СЕЙЧАС</b><strong>Специалист сопоставляет СЭД, чаты и файлы</strong><p>Отдельно собирает вопросы, сроки, исполнителей и статус поручений.</p></div>
+          <div class="pitch-card"><b>В РИТМ</b><strong>Повестка → проект решений → сводный протокол → поручения</strong><p>Выбирает Совет, вносит вопрос, заполняет решение, выгружает черновик Word и отмечает исполнение.</p></div>
+          <div class="pitch-card"><b>ЧТО ПРОЩЕ</b><strong>Сведения не нужно переносить между разделами вручную</strong><p>Проект решения виден в протоколе; сроки и статус поручений доступны в одном интерфейсе.</p></div>
+        </div>
+        <figure class="screen-frame pitch-screen"><img src="presentation-assets/protocols.png?v=20261003d" alt="Рабочий экран РИТМ: сводный протокол Совета с реквизитами и вопросами повестки"><figcaption>Рабочий экран · сводный протокол</figcaption></figure>
       </div>
-      <figure class="screen-frame interface-stage">
-         <img src="presentation-assets/overview.png?v=20261003d" alt="Текущий интерфейс РИТМ: обзор без счётчика, проект решений со счётчиком и сводные протоколы без счётчика">
-        <figcaption class="interface-tags"><span>ОБЗОР</span><span>СОВЕТЫ</span><span>ПРОЕКТ РЕШЕНИЙ</span><span>ПРОТОКОЛЫ</span><span>ПОРУЧЕНИЯ</span><span>МЕДИА</span></figcaption>
-      </figure>
-      <span class="slide-footer">Единое рабочее пространство для всех участников процесса</span>
+      <span class="slide-footer">Демонстрационная версия: данные сохраняются локально в браузере пользователя</span>
     </section>
 
-    <section class="slide">
-      <span class="slide-number">03 / 08</span>
-      <p class="eyebrow">КОНТЕКСТ</p>
-      <h2>Сегодня решения<br>растворяются по пути</h2>
-      <div class="problem-grid">
-        <div class="problem-card"><b>01 — ВОПРОСЫ</b><strong>Поручения живут в СЭДе или чатах</strong><p>Нельзя быстро найти контекст, владельца и срок.</p></div>
-        <div class="problem-card"><b>02 — ИСПОЛНЕНИЕ</b><strong>Поручения теряются между протоколом и планером</strong><p>Статус приходится собирать вручную.</p></div>
-        <div class="problem-card"><b>03 — КОММУНИКАЦИЯ</b><strong>Граждане узнают о решениях слишком поздно</strong><p>Нет единого ритма и готового контента.</p></div>
+    <section class="slide pitch-slide">
+      <span class="slide-number">03 / 04</span>
+      <p class="eyebrow">ПЛАН ПИЛОТА</p>
+      <h2>Один Совет. <span class="accent">Один цикл заседания.</span></h2>
+      <div class="pitch-steps">
+        <div class="pitch-card"><b>ГДЕ И КОГДА</b><strong>ОКМВ · Совет по НТР</strong><p>Предлагаемый старт — ближайшее заседание после согласования. Подготовка и проверка результата — в течение 4 недель.</p></div>
+        <div class="pitch-card"><b>МАСШТАБ И ДЕЙСТВИЯ</b><strong>1 Совет, 1 повестка, 1 протокол</strong><p>Занести вопросы, собрать проект решений, сверить черновик протокола и проследить поручения.</p></div>
+        <div class="pitch-card"><b>ИСПОЛНИТЕЛИ И РЕСУРСЫ</b><strong>Специалист ОКМВ + секретарь Совета</strong><p>Исходные формы и материалы заседания, рабочие места с браузером, время на сверку документов.</p></div>
       </div>
-      <div class="problem-path"><span>РАЗРОЗНЕННЫЕ КАНАЛЫ</span><i></i><span class="accent">ЕДИНЫЙ УПРАВЛЯЕМЫЙ ЦИКЛ</span></div>
-      <span class="slide-footer">От фрагментарного процесса — к управляемому циклу</span>
+      <p class="pitch-highlight"><strong>Условие запуска:</strong> согласие руководителя и секретаря на работу с материалами заседания. Обеспечить согласованием пилота и перечня разрешённых данных; демоверсию использовать на обезличенных материалах.</p>
+      <span class="slide-footer">Параметры пилота — предложение, дату и участников нужно согласовать</span>
     </section>
 
-    <section class="slide">
-      <span class="slide-number">04 / 08</span>
-       <div class="module-head">
-         <div><p class="eyebrow">РЕШЕНИЕ</p><h2>Единый цикл.<br>Три Совета.</h2></div>
-         <p>РИТМ связывает сведения о Советах, повестку, отдельные проекты решений, сводный протокол, контроль поручений и подготовку публикации.</p>
+    <section class="slide pitch-slide">
+      <span class="slide-number">04 / 04</span>
+      <p class="eyebrow">ПОКАЗАТЕЛЬ · ПЕРВЫЙ ШАГ</p>
+      <h2>Сколько времени занимает <span class="accent">протокол?</span></h2>
+      <div class="pitch-metric"><div><strong>14 дней</strong><small>исходный ориентир*</small></div><span class="arrow">→</span><div><strong>3–4 дня</strong><small>цель после пилота</small></div></div>
+      <div class="pitch-grid">
+        <div class="pitch-card"><b>КАК ПРОВЕРИМ</b><strong>От даты заседания до утверждения протокола</strong><p>Источник — даты заседаний и утверждённых протоколов Совета. Сверить 3 прошлых заседания с пилотным; итог — через 4 недели после старта пилота.</p></div>
+        <div class="pitch-card"><b>ПОСЛЕ ЗАЩИТЫ</b><strong>Предложить пилот руководителю ОКМВ и секретарю</strong><p>Нужна помощь: согласовать Совет, дату заседания, доступ к обезличенным документам и время сотрудников на проверку.</p></div>
       </div>
-      <div class="module-gallery">
-         <figure class="module-shot"><img src="presentation-assets/agenda.png?v=20261003d" alt="Актуальный раздел Повестка"><figcaption class="module-label"><b>01</b><strong>Повестка</strong></figcaption></figure>
-         <figure class="module-shot"><img src="presentation-assets/protocols.png?v=20261003d" alt="Актуальный раздел Сводные протоколы"><figcaption class="module-label"><b>02</b><strong>Решения и протокол</strong></figcaption></figure>
-         <figure class="module-shot"><img src="presentation-assets/tasks.png?v=20261003d" alt="Актуальный раздел Поручения"><figcaption class="module-label"><b>03</b><strong>Поручения и сроки</strong></figcaption></figure>
-         <figure class="module-shot"><img src="presentation-assets/media.png?v=20261003d" alt="Актуальный раздел Медиа-мастерская"><figcaption class="module-label"><b>04</b><strong>Медиа-мастерская</strong></figcaption></figure>
-      </div>
-      <span class="slide-footer">Автоматизация рутины · усиление контроля · решение остается за человеком</span>
-    </section>
-
-    <section class="slide task-slide">
-      <span class="slide-number">05 / 08</span>
-      <p class="eyebrow">КАК ЭТО РАБОТАЕТ</p>
-       <h2>Поручения <span class="accent">под контролем</span></h2>
-      <figure class="screen-frame task-stage">
-         <img src="presentation-assets/tasks.png?v=20261003d" alt="Актуальные вкладки, фильтры и список поручений платформы РИТМ">
-         <figcaption class="screen-caption">Поручения · владелец · срок · статус · комментарий</figcaption>
-        <span class="annotation tabs">По Советам и статусу</span>
-        <span class="annotation filters">Фильтры</span>
-        <span class="annotation create">Новое поручение</span>
-      </figure>
-       <span class="slide-footer">По каждому Совету: просрочено — красный · не исполнено — оранжевый · исполнено — зелёный</span>
-    </section>
-
-    <section class="slide">
-      <span class="slide-number">06 / 08</span>
-      <p class="eyebrow">ЭФФЕКТ</p>
-      <h2>Меньше потерь.<br>Больше доверия.</h2>
-      <div class="kpis">
-        <div class="kpi"><strong>3–4</strong><span>дня до утверждения<br>вместо 14</span></div>
-        <div class="kpi"><strong>90%</strong><span>поручений<br>в срок</span></div>
-        <div class="kpi"><strong>×2</strong><span>медийный охват<br>Советов</span></div>
-        <div class="kpi"><strong>24 ч</strong><span>от решения<br>до публикации</span></div>
-      </div>
-      <div class="effect-note">
-        <p>Результат измеряется не количеством функций, а тем, как быстро решение становится действием, а действие — понятным сообщением для жителей.</p>
-        <div class="target-badge">ЦЕЛЕВЫЕ ПОКАЗАТЕЛИ<br>уточняются по итогам пилота</div>
-      </div>
-      <span class="slide-footer">Целевые показатели улучшенной версии</span>
-    </section>
-
-    <section class="slide">
-      <span class="slide-number">07 / 08</span>
-       <p class="eyebrow">ЧТО УЖЕ РАБОТАЕТ</p>
-        <h2>От проекта решения <span class="accent">к протоколу</span></h2>
-       <div class="roadmap">
-          <div class="roadmap-card"><b>01 · ПОДГОТОВКА</b><strong>Проект решений</strong><p>Ответственный, сроки и поручения сохраняются отдельно для НТР, ССП и ДНЦ.</p></div>
-          <div class="roadmap-card"><b>02 · ДОКУМЕНТ</b><strong>Сводный протокол</strong><p>Данные проекта и включённые предложения собраны вместе; единый черновик выгружается в Word.</p></div>
-          <div class="roadmap-card"><b>03 · КОНТРОЛЬ</b><strong>Поручения Совета</strong><p>Просроченные, неисполненные и исполненные видны в нужном порядке с цветовой подсветкой.</p></div>
-       </div>
-       <div class="roadmap-screens">
-         <figure class="roadmap-screen"><img src="presentation-assets/agenda.png?v=20261003d" alt="Форма создания предложения"><span>Предложения в повестку</span></figure>
-         <figure class="roadmap-screen"><img src="presentation-assets/protocols.png?v=20261003d" alt="Сводный протокол"><span>Проект протокола</span></figure>
-         <figure class="roadmap-screen"><img src="presentation-assets/tasks.png?v=20261003d" alt="Список поручений"><span>Контроль исполнения</span></figure>
-       </div>
-       <span class="slide-footer">Данные демонстрационной версии сохраняются локально в браузере пользователя</span>
-    </section>
-
-    <section class="slide closing-slide">
-      <span class="slide-number">08 / 08</span>
-      <div class="closing-symbol" aria-hidden="true">Р<i></i><i></i></div>
-      <p class="eyebrow">РИТМ · РЕШЕНИЯ В ДЕЙСТВИИ</p>
-      <h2>Спасибо за внимание</h2>
-      <div class="closing-quotes">
-        <blockquote>«Решение обретает ценность, когда становится действием.»<cite>ПРИНЦИП РИТМ</cite></blockquote>
-        <blockquote>«Общий ритм превращает отдельные усилия в результат.»<cite>ПРИНЦИП РИТМ</cite></blockquote>
-      </div>
-      <p class="closing-signature">ЕДИНАЯ ПЛАТФОРМА УПРАВЛЕНИЯ</p>
-      <span class="slide-footer">РИТМ · решения · исполнение · результат</span>
+      <p class="pitch-note">*14 дней — оценка из предыдущей версии проекта, не подтверждённый замер. Фактическую исходную величину установим по датам трёх протоколов до старта.</p>
+      <span class="slide-footer">Результат пилота сравниваем с проверенной базой, а не с оценкой</span>
     </section>
   </main>
 
